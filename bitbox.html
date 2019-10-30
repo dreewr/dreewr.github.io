@@ -46,38 +46,90 @@
         <section class="post">
             <header class="major">
                 <!--									<span class="date">Outubro, 2019</span>-->
-                <h2><a href="bitbox.html">BITBOX:<br/>
+                <h2><a href="bitbox.html">BITBOX<br/>
                     COMPRANDO PRODUTOS COM CRIPTOMOEDAS</a></h2>
                 <p>Projeto de integração da UTFPR, a Bitbox foi uma demonstração de como produtos <br/>
                     já conhecidos podem assimilar novas tecnologias de forma inovadora. <br/>
             </header>
             <div class="image main"><img src="images/bitbox-banner.PNG" alt=""/></div>
-            <p> A Bitbox é um protótipo de máquina de vendas automática, idealizada e desenvolvida por mim juntamente
-                aos meus colegas de equipe da UTFPR. Como entusiasta de criptomoedas, decidi usá-las como meio de
-                pagamento dentro do protótipo, o que eliminaria toda a necessidade de um aparato mecânico de captura de
-                cédulas e moedas para efetuar os pagamentos. <br/>
-                Como forma de interface com nosso usuário final foi desenvolvido um aplicativo Android, já que a minha
-                experiência como desenvolvedor mobile agregaria bastante à qualidade do app.
-                A conceitualização do projeto, arquitetura do sistema e o trabalho
+
+            <header class="major">
+                <h3> O que é a Bitbox?</a></h3>
+            </header>
+
+            <p style="margin-left: 40px"> A Bitbox é um protótipo de máquina de vendas automática, idealizada e
+                desenvolvida por mim juntamente aos meus colegas de equipe da UTFPR. Como entusiasta de criptomoedas,
+                decidi usá-las como meio de pagamento dentro do protótipo, o que eliminaria toda a necessidade de um
+                aparato mecânico de captura de cédulas e moedas para efetuar os pagamentos. <br/>
+                Como forma de interface com nosso usuário final desenvolvi aplicativo Android, trazendo mais uma camada
+                de transformação digital à nossa <i>vending machine</i>.<br/>
+            </p>
+            <header class="major">
+                <h3> Arquitetura da Bitbox</a></h3>
+            </header>
+
+            <p style="margin-left: 40px"> O sistema da Bitbox é coordenado por um servidor central, que processa os
+                pedidos de produto feitos pelo
+                app, um sistema embarcado que coordena a parte eletrônica e reage aos pedidos enviados pelo servidor.
             </p>
 
-            <iframe width="630" height="472" class="image main"
-                    src="https://www.youtube.com/watch?v=XZCVkzCKvPk">
-            </iframe>
+            <div class="image main"><img src="images/bitbox-architecture.jpeg" alt=""/></div>
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent
-                taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu
-                nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies
-                condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem
-                mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et
-                netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque
-                aliquam maximus risus. Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in
-                faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae
-                egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum.</p>
+            <header class="major">
+                <h3> Aplicativo móvel </a></h3>
+            </header>
+
+            <p style="margin-left: 40px"> O app é a interface principal do sistema, e desenvolvê-lo foi uma boa
+                oportunidade de testar novas
+                arquiteturas e tecnologias. </p>
+            <p style="margin-left: 40px"> Antes de iniciar o código, fiz um wireframe para estruturar os requisitos do
+                app, e também trazer à tona
+                todas as requisições que o aplicativo precisaria fazer para comunicação com o servidor, e isso foi
+                essencial para o mapeamento dos endpoints e modelagem do banco de dados. <br/>
+
+            <div class="image main"><img src="images/bitbox-wireframe.png" alt=""/></div>
+
+            <p style="margin-left: 40px">
+                O aplicativo da Bitbox foi implementado em <b>Kotlin</b>, para dispositivos Android. Desenvolvi o
+                aplicativo seguindo a <i>Clean Architecture</i>, e discorro um pouco mais sobre a arquitetura
+                <a href="https://thebitboxproject.wordpress.com/2019/04/25/desenvolvimento-do-aplicativo-a-arquitetura/"
+                   target="_blank">neste post</a>.
+
+            <p style="margin-left: 40px"> Algumas das bibliotecas usadas foram:
+
+            <ul style="list-style-type:disc;margin-left: 40px">
+                <li><b>Dagger2</b> para injeção de dependências</li>
+                <li><b>Retrofit2</b> para realizar a comunicação com o servidor</li>
+                <li><b>RxJava</b> para programação reativa</li>
+                <li>Componentes do <b>Android Jetpack</b> para implementação da <i>Clean Architecture</i></li>
+            </ul>
+            </p>
+
+            <iframe class="image main" height="500" src="https://www.youtube.com/embed/XGrPbTlO4so"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+
+            <header class="major">
+                <h3> Bitbox em funcionamento</a></h3>
+            </header>
+
+            <p> Neste vídeo o <a href="https://www.linkedin.com/in/gustavo-akira-gondo-187345147/" target="_blank">Akira
+                Gondo</a> explica em mais detalhes sobre como a Bitbox foi desenvolvida, e também é possível ver ela em
+                funcionamento com todos os componentes integrados:
+            </p>
+
+            <iframe class="image main" height="500" src="https://www.youtube.com/embed/XZCVkzCKvPk"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+
+            <header class="major">
+                <a href="https://thebitboxproject.wordpress.com/" class="button large">Veja mais sobre o projeto no site
+                    da Bitbox! </a>
+            </header>
+
         </section>
 
     </div>
-
     <!-- Footer -->
     <footer id="footer">
         <section class="split contact">
