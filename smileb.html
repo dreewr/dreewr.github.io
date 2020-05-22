@@ -59,81 +59,153 @@
             </p>
 
             <header class="major">
-                <h3>Refatorar ou fazer do zero?</h3>
+                <h2>Corrigir ou fazer do zero?</h2>
             </header>
 
             <p style="margin-left: 40px">
-                Mussum Ipsum, cacilds vidis litro abertis. Casamentiss faiz malandris se pirulitá. Tá deprimidis, eu
-                conheço uma cachacis que pode alegrar sua vidis. Delegadis gente finis, bibendum egestas augue arcu ut
-                est. Mauris nec dolor in eros commodo tempor. Aenean aliquam molestie leo, vitae iaculis nisl.
-                </br>
+                No primeiro contato com o cliente, a ideia era continuar o desenvolvimento do aplicativo a partir de um
+                código que já havia sido iniciado.
+                Porém, ao analisar a implementação e a arquitetura escolhida para compor as funcionalidades, percebi
+                diversas escolhas que iam contra as boas práticas de engenharia de software assim como quebras de
+                padrões de design para aplicativos móveis.</br>
             </p>
 
-            <p style="margin-left: 40px">
-                </br>
-            </p>
+            <ul style="list-style-type:disc;margin-left: 40px">
+                <li>O aplicativo não contava com uma <b>hierarquia de funcionalidades</b> bem definida.
+                    Ao misturar padrões de navegação como o <b>menu lateral</b> e a <b>barra de navegação inferior</b> ,
+                    a jornada do
+                    usuário ficava confusa e funcionalidades ficavam escondidas.
+                </li>
+                <li> Contrariando as boas práticas de navegação, a barra de navegação inferior não era
+                    <b>consistente</b>,
+                    mudando seus ícones de tela em tela. Além de confundir o usuário, gerava uma sobrecarga no código
+                    que
+                    precisava tratar esse comportamento dinâmico.
+                </li>
+                <li> Algumas das escolhas de design não eram apropriadas para o contexto do aplicativo, e essas decisões
+                    ao serem implementadas tornariam ainda mais difícil o trabalho de
+                    refatoração.
+                </li>
+                <li> A conjunção desses fatores acarretava num aplicativo cheio de <i>bugs</i> e <i>crashes</i>, e o
+                    trabalho de debug e análise desses erros por si só já tomaria um tempo enorme de desenvolvimento.
+                </li>
+                <li>Não haviam sido suficientemente implementados padrões de projeto como MVC ou MVVM que permitissem a
+                    refatoração e
+                    manutenibilidade do código.
+                </li>
+            </ul>
 
             <p>
                 <figure class="half" style="display:flex">
-                    <img style="width:25%" src="images/smileb/1.PNG">
-                    <img style="width:25%" src="images/smileb/2.PNG">
-                    <img style="width:25%" src="images/smileb/4.PNG">
-                    <img style="width:25%" src="images/smileb/3.PNG">
+                    <img style="width:25%" src="images/smileb/old/1.PNG">
+                    <img style="width:25%" src="images/smileb/old/2.PNG">
+                    <img style="width:25%" src="images/smileb/old/4.PNG">
+                    <img style="width:25%" src="images/smileb/old/3.PNG">
                 </figure>
             </p>
-
             <p style="margin-left: 40px">
-                A ideia inicial do projeto era fazer
+                A partir disso propus refazer o aplicativo, reaproveitando alguns trechos de código, mas com uma
+                estrutura reformulada, o que foi bem aceito pelos clientes.
             </p>
 
+            <header class="major">
+                <h2>Reestruturando o projeto</h2>
+            </header>
+            <p style="margin-left: 40px">
+                A reestruturação do projeto foi feita tendo em mente tanto uma melhora da experiência do usuário quanto
+                a do desenvolvedor envolvido na implementação do sistema.
+            </p>
 
             <ul style="list-style-type:disc;margin-left: 40px">
-                <li> Comunicação remota usando <b>WebSockets</b> e consumo de APIs</li>
-                <li> Integração dinâmica com as redes de diversas fábricas</li>
-                <li> Implementação em <i>CleanArchitecture</i></li>
-                <li> Uso do <b>Dagger2</b>, <b>RxJava</b> e <b>Android Jetpack</b> como tecnologias base</li>
+                <li>Estabelecemos uma hierarquia de funcionalidades coesa, que deixasse o uso do aplicativo intuitivo.
+                    Eliminamos o menu lateral, deixando apenas a <i>Bottom Navigation</i>, realocando funcionalidades
+                    secundárias.
+                </li>
+                <li>Criamos fluxos consistentes e independentes para cada funcionalidade. Isso eliminou a
+                    sobrecarga do código anterior, facilitando a manutenção e gerenciamento de estados do aplicativo.
+                </li>
+                <li>Passamos a utilizar os componentes do <b><i>Android Jetpack</i></b> para adicionar padrões de
+                    comportamento reativo no sistema, permitindo maior responsividade e qualidade no código.
+                </li>
+                </br>
             </ul>
 
             <header class="major">
-                <h2> Ubivis DiM </h2>
+                <h3>Agendamento de consulta</h3>
             </header>
-
             <p style="margin-left: 40px">
-
-            <p>
-                <figure class="half" style="display:flex">
-                    <img style="width:25%" src="images/ubivis/ier/1.PNG">
-                    <img style="width:25%" src="images/ubivis/ier/2.PNG">
-                    <img style="width:25%" src="images/ubivis/ier/3.PNG">
-                    <img style="width:25%" src="images/ubivis/ier/4.PNG">
-                </figure>
+                A funcionalidade principal desenvolvida foi a de agendamento de consultas. A partir da localização o
+                usuário e das opções de filtragem a API retorna os profissionais adequados, permitindo a visualização do
+                perfil do profissional e o eventual agendamento.
             </p>
+            <p style="margin: 40px">
+                <figure class="half" style="display:flex">
+                    <img style="width:50%" src="images/smileb/new/search/search1.PNG">
+                    <img style="width:50%" src="images/smileb/new/search/search2.PNG">
+
+                </figure>
+                <figure class="half" style="display:flex">
+                    <img style="width:50%" src="images/smileb/new/search/search3.PNG">
+                    <img style="width:50%" src="images/smileb/new/search/search4.PNG">
+                </figure>
+                </br>
+            </p>
+
+            <header class="major">
+                <h3>Controle de agendamentos</h3>
+            </header>
+            <p style="margin-left: 40px">
+                Presente tanto no aplicativo do profissional quanto do paciente, também foram implementadas telas para
+                visualização do estado da consulta, confirmação de agendamento, avaliação e o histórico.
+            </p>
+            <p style="margin: 40px">
+                <figure class="half" style="display:flex">
+                    <img style="width:33%" src="images/smileb/new/scheduled/1.PNG">
+                    <img style="width:34%" src="images/smileb/new/scheduled/2.PNG">
+                    <img style="width:33%" src="images/smileb/new/scheduled/3.PNG">
+                </figure>
+                </br>
+            </p>
+
+            <header class="major">
+                <h3>Login e cadastro do usuário</h3>
+            </header>
+            <p style="margin-left: 40px">
+                Também foi implementei cadastro e login no sistema, podendo ser feito por email, Google ou Facebook.
+                Como melhoria de usabilidade, os usuários em busca de profissionais só fazem o login caso desejem
+                finalizar o agendamento, podendo usar as outras funcionalidades de busca sem ter feito o cadastro.
+            </p>
+            <p style="margin: 40px">
+                <figure class="half" style="display:flex">
+                    <img style="width:50%" src="images/smileb/new/login/1.PNG">
+                    <img style="width:50%" src="images/smileb/new/login/2.PNG">
+                </figure>
+                </br>
+            </p>
+
+
+            <header class="major">
+                <h3>Perfil de usuário</h3>
+            </header>
+            <p style="margin-left: 40px">
+                Para finalizar, os usuários também podem editar as suas informações de perfil. Foram implementadas
+                algumas funcionalidades de processamento de imagem para melhorar a performance e reduzir o consumo de
+                dados na comunicação com o servidor.
+            </p>
+            <p style="margin: 40px">
+                <figure class="half" style="display:flex">
+                    <img style="width:33%" src="images/smileb/new/profile/3.PNG">
+                    <img style="width:34%" src="images/smileb/new/profile/2.PNG">
+                    <img style="width:33%" src="images/smileb/new/profile/1.PNG">
+                </figure>
+                </br>
+            </p>
+
         </section>
 
     </div>
 
 </div>
-
-<!-- Copyright -->
-<div id="copyright">
-    <ul>
-        <li>André Rodrigues</li>
-        <li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
-    </ul>
-</div>
-</div>
-
-<!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.scrollex.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
-
-</body>
-
 <!-- Footer TODO: não alterar daqui pra baixo!! -->
 <footer id="footer">
     <section class="split contact">
@@ -157,6 +229,27 @@
 
     </section>
 </footer>
+<!-- Copyright -->
+<div id="copyright">
+    <ul>
+        <li>André Rodrigues</li>
+        <li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+    </ul>
+</div>
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+
+
 </html>
 
 <!--
