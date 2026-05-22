@@ -1451,3 +1451,39 @@ dialog#dlg-config::backdrop {
 .avisos-pipeline ul { margin: 0.5rem 0; padding-left: 1.5rem; }
 .avisos-pipeline li { margin: 0.25rem 0; line-height: 1.4; }
 .avisos-pipeline .dica { margin: 0.5rem 0 0; font-size: 0.85rem; color: #6e5409; }
+
+/* Aba Entrada — cada campo (link/edital/matrícula) ocupa sua própria linha,
+   largo, com espaçamento generoso pra não ficar tudo amontoado. */
+.campos-entrada {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.25rem 0 1.5rem;
+}
+.campo-entrada {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.campo-entrada label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-fg, #222);
+}
+.campo-entrada input[type="url"],
+.campo-entrada input[type="file"] {
+  width: 100%;
+  max-width: 640px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: var(--color-bg, #fff);
+}
+.campo-entrada input[type="file"] {
+  padding: 6px 10px;  /* file inputs já têm padding interno do botão nativo */
+}
+.campo-entrada input[type="url"]:focus,
+.campo-entrada input[type="file"]:focus {
+  outline-color: var(--color-link, #2a64d6);
+}
