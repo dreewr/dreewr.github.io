@@ -1487,3 +1487,63 @@ dialog#dlg-config::backdrop {
 .campo-entrada input[type="file"]:focus {
   outline-color: var(--color-link, #2a64d6);
 }
+
+/* Link "abrir PDF" ao lado do título da aba (Edital, Matrícula) */
+.aba-conteudo h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.link-pdf-aba {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  background: var(--color-bg-soft, #eef);
+  color: var(--color-link, #2a64d6);
+  text-decoration: none;
+  border-radius: 6px;
+  border: 1px solid var(--color-border, #ddd);
+}
+.link-pdf-aba:hover {
+  background: var(--color-link, #2a64d6);
+  color: white;
+}
+
+/* Tooltip clicável das validações (em vez de só title nativo) */
+.val-linha {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.val-hint-details {
+  display: inline-block;
+  flex: 0 0 auto;
+}
+.val-hint-details summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  font-size: 1rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.val-hint-details summary::-webkit-details-marker { display: none; }
+.val-hint-details summary:hover { background: rgba(0,0,0,0.06); }
+.val-hint-details[open] summary { background: rgba(0,0,0,0.08); }
+.val-hint-conteudo {
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  background: white;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--color-fg, #222);
+}
+.lista-validacoes li {
+  flex-direction: column;
+  align-items: stretch;
+}

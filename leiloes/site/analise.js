@@ -242,11 +242,17 @@
       },
     ];
 
+    // <details> clicável em vez de só title (que só aparece em hover lento)
     lista.innerHTML = linhas.map(l => `
       <li>
-        ${badgeValidacao(l.ok)}
-        <span class="val-label">${l.label}</span>
-        <span class="val-hint" title="${l.hint}">ℹ️</span>
+        <div class="val-linha">
+          ${badgeValidacao(l.ok)}
+          <span class="val-label">${l.label}</span>
+          <details class="val-hint-details">
+            <summary aria-label="Ver detalhes">ℹ️</summary>
+            <div class="val-hint-conteudo">${l.hint}</div>
+          </details>
+        </div>
       </li>
     `).join('');
     wrap.hidden = false;
@@ -258,16 +264,22 @@
 
     const editalUrl = state.imovel?.edital?.pdf_url;
     const linkEdital = $('link-pdf-edital');
+    const linkEditalAba = $('link-pdf-edital-aba');
     if (editalUrl) {
-      linkEdital.href = window.API_BASE + editalUrl;
+      const fullUrl = window.API_BASE + editalUrl;
+      linkEdital.href = fullUrl;
       linkEdital.hidden = false;
+      if (linkEditalAba) { linkEditalAba.href = fullUrl; linkEditalAba.hidden = false; }
     }
 
     const matriculaUrl = state.imovel?.matricula?.pdf_url;
     const linkMatricula = $('link-pdf-matricula');
+    const linkMatriculaAba = $('link-pdf-matricula-aba');
     if (matriculaUrl) {
-      linkMatricula.href = window.API_BASE + matriculaUrl;
+      const fullUrl = window.API_BASE + matriculaUrl;
+      linkMatricula.href = fullUrl;
       linkMatricula.hidden = false;
+      if (linkMatriculaAba) { linkMatriculaAba.href = fullUrl; linkMatriculaAba.hidden = false; }
     }
 
     const link = state.imovel?.link;
