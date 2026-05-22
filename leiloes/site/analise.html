@@ -11,7 +11,7 @@
 
   <header class="site-header" role="banner">
     <div class="header-left">
-      <h1 class="site-title">Analisar imóvel</h1>
+      <h1 class="site-title" id="titulo-imovel">Analisar imóvel</h1>
     </div>
     <div class="header-actions">
       <a class="header-link" href="imoveis.html">← Voltar para a lista</a>
@@ -20,19 +20,23 @@
 
   <main id="main-content" class="app-main wizard" tabindex="-1">
 
-    <ol class="passos" id="passos">
-      <li data-step="1" class="ativo">1. Entrada</li>
-      <li data-step="2">2. Gates Fase 1</li>
-      <li data-step="3">3. Estimativas</li>
-      <li data-step="4">4. Resultado</li>
-    </ol>
+    <!-- Banner de cache (aparece quando reabre imóvel) -->
+    <div id="cache-banner" class="banner banner-info" hidden></div>
 
-    <!-- ETAPA 1 — entrada -->
-    <section class="etapa" data-step="1">
-      <h2>Suba os documentos do imóvel</h2>
-      <p class="dica">Anexe o edital e a matrícula em PDF. A análise leva 1–3 minutos.</p>
+    <!-- ABAS — só viram clicáveis depois que o imóvel existe -->
+    <nav class="abas" id="abas" role="tablist">
+      <button type="button" class="aba-tab ativo" data-tab="entrada" role="tab" aria-selected="true">📥 Entrada</button>
+      <button type="button" class="aba-tab" data-tab="edital" role="tab" disabled>📄 Edital</button>
+      <button type="button" class="aba-tab" data-tab="matricula" role="tab" disabled>📜 Matrícula</button>
+      <button type="button" class="aba-tab" data-tab="processos" role="tab" disabled>⚖️ Processos</button>
+      <button type="button" class="aba-tab" data-tab="viabilidade" role="tab" disabled>💰 Viabilidade</button>
+      <button type="button" class="aba-tab" data-tab="arrematacao" role="tab" disabled>🏆 Arrematação</button>
+    </nav>
 
-      <div id="cache-banner" class="banner banner-info" hidden></div>
+    <!-- ABA: ENTRADA -->
+    <section class="aba-conteudo" data-tab-content="entrada">
+      <h2>Documentos do imóvel</h2>
+      <p class="dica">Anexe o edital e a matrícula em PDF. A análise leva 1-3 minutos. Você poderá editar tudo nas abas seguintes.</p>
 
       <label for="link-imovel">Link do imóvel (página do leiloeiro)</label>
       <input type="url" id="link-imovel" placeholder="https://..." />
@@ -49,51 +53,56 @@
       </div>
 
       <p id="erro-analise" class="erro" hidden></p>
-    </section>
 
-    <!-- ETAPA 2 — gates -->
-    <section class="etapa" data-step="2" hidden>
-      <h2>Gates da Fase 1</h2>
-      <p class="dica">Cada item abaixo elimina o imóvel se falhar. Confira o que a IA extraiu.</p>
-
-      <div id="gates"></div>
-
-      <details>
-        <summary>Ver relatório completo do edital</summary>
-        <div id="md-edital" class="markdown-out"></div>
-      </details>
-
-      <details>
-        <summary>Ver relatório completo da matrícula</summary>
-        <div id="md-matricula" class="markdown-out"></div>
-      </details>
-
-      <div class="acoes">
-        <button type="button" id="btn-descartar" class="btn-destrutivo">Descartar imóvel</button>
-        <button type="button" id="btn-para-estimativas" class="btn-primario">Continuar →</button>
+      <!-- Quando já há um imóvel carregado, mostrar os links pra rever PDFs -->
+      <div id="entrada-pdfs" hidden>
+        <h3>Anexos salvos</h3>
+        <ul class="lista-anexos">
+          <li><a id="link-pdf-edital" href="#" target="_blank" rel="noopener" hidden>📄 Ver edital salvo</a></li>
+          <li><a id="link-pdf-matricula" href="#" target="_blank" rel="noopener" hidden>📜 Ver matrícula salva</a></li>
+          <li><a id="link-anuncio-salvo" href="#" target="_blank" rel="noopener" hidden>🔗 Página do leiloeiro</a></li>
+        </ul>
       </div>
     </section>
 
-    <!-- ETAPA 3 — estimativas -->
-    <section class="etapa" data-step="3" hidden>
-      <h2>Estimativas rápidas</h2>
-      <p class="dica">Preencha com valores aproximados — refina depois.</p>
+    <!-- ABAS: gerenciadas pelo JS via schema -->
+    <section class="aba-conteudo" data-tab-content="edital" hidden>
+      <h2>Jurídico — Edital</h2>
+      <p class="dica">Checklist baseado em <code>2-analise/pontos-eliminatorios.md</code> e <code>4b-extrajudicial/</code>. Itens já pré-preenchidos pelo que foi extraído do PDF — confirme, ajuste, salve.</p>
+      <div class="checklist" data-checklist="edital"></div>
+      <div class="acoes acoes-aba">
+        <button type="button" class="btn-primario btn-salvar-aba" data-aba="edital">Salvar alterações</button>
+        <span class="status-salvo" data-status-salvo="edital" hidden>✅ Salvo</span>
+      </div>
+    </section>
 
-      <label for="valor-mercado">Valor de mercado estimado (R$)</label>
-      <input type="number" id="valor-mercado" min="0" step="1000" placeholder="350000" />
+    <section class="aba-conteudo" data-tab-content="matricula" hidden>
+      <h2>Jurídico — Matrícula</h2>
+      <p class="dica">Atos da matrícula classificados cronologicamente. Confira consolidação, AFs, ônus, notificação.</p>
+      <div class="checklist" data-checklist="matricula"></div>
+      <div class="acoes acoes-aba">
+        <button type="button" class="btn-primario btn-salvar-aba" data-aba="matricula">Salvar alterações</button>
+        <span class="status-salvo" data-status-salvo="matricula" hidden>✅ Salvo</span>
+      </div>
+    </section>
 
-      <label for="valor-arrematacao">Valor da arrematação pretendido (R$)</label>
-      <input type="number" id="valor-arrematacao" min="0" step="1000" placeholder="210000" />
+    <section class="aba-conteudo" data-tab-content="processos" hidden>
+      <h2>Jurídico — Processos</h2>
+      <p class="dica">Fase 2. Pesquisa processual <strong>dinâmica</strong> — refazer na véspera do leilão.</p>
+      <div class="checklist" data-checklist="processos"></div>
+      <div class="acoes acoes-aba">
+        <button type="button" class="btn-primario btn-salvar-aba" data-aba="processos">Salvar alterações</button>
+        <span class="status-salvo" data-status-salvo="processos" hidden>✅ Salvo</span>
+      </div>
+    </section>
 
-      <label for="iptu">IPTU mensal estimado (R$)</label>
-      <input type="number" id="iptu" min="0" step="10" placeholder="150" />
+    <section class="aba-conteudo" data-tab-content="viabilidade" hidden>
+      <h2>Viabilidade Financeira</h2>
+      <p class="dica">Preencha estimativas e calcule. Meta: lucro ≥ 30%.</p>
+      <div class="checklist" data-checklist="viabilidade"></div>
 
-      <label for="condominio">Condomínio mensal estimado (R$)</label>
-      <input type="number" id="condominio" min="0" step="50" placeholder="500" />
-
-      <fieldset>
+      <fieldset class="custos-arrematacao">
         <legend>Custos da arrematação (defaults aceitáveis)</legend>
-
         <label for="comissao-leiloeiro">Comissão do leiloeiro (%)</label>
         <input type="number" id="comissao-leiloeiro" min="0" step="0.1" value="5" />
 
@@ -116,24 +125,26 @@
         <input type="number" id="prazo" min="1" step="1" value="12" />
       </fieldset>
 
-      <div class="acoes">
-        <button type="button" id="btn-voltar-2" class="btn-secundario">← Voltar</button>
-        <button type="button" id="btn-calcular" class="btn-primario">Calcular viabilidade</button>
+      <div class="acoes acoes-aba">
+        <button type="button" class="btn-primario btn-salvar-aba" data-aba="viabilidade">Salvar alterações</button>
+        <button type="button" class="btn-secundario" id="btn-calcular">Calcular viabilidade</button>
+        <span class="status-salvo" data-status-salvo="viabilidade" hidden>✅ Salvo</span>
       </div>
-    </section>
-
-    <!-- ETAPA 4 — resultado -->
-    <section class="etapa" data-step="4" hidden>
-      <h2>Resultado</h2>
 
       <div id="resultado-viab" class="resultado"></div>
+    </section>
 
-      <h3>O que ainda falta avaliar</h3>
-      <ul id="lista-pendentes" class="pendentes"></ul>
+    <section class="aba-conteudo" data-tab-content="arrematacao" hidden>
+      <h2>Checklist Arrematação</h2>
+      <p class="dica">Validações finais antes e depois do pregão. Veja também os <strong>alertas críticos</strong> que vieram das outras abas.</p>
 
-      <div class="acoes">
-        <button type="button" id="btn-voltar-3" class="btn-secundario">← Ajustar estimativas</button>
-        <button type="button" id="btn-salvar" class="btn-primario">Salvar e voltar à lista</button>
+      <div id="alertas-criticos"></div>
+
+      <div class="checklist" data-checklist="arrematacao"></div>
+
+      <div class="acoes acoes-aba">
+        <button type="button" class="btn-primario btn-salvar-aba" data-aba="arrematacao">Salvar alterações</button>
+        <span class="status-salvo" data-status-salvo="arrematacao" hidden>✅ Salvo</span>
       </div>
     </section>
 
@@ -141,6 +152,8 @@
 
   <script src="vendor/marked.min.js"></script>
   <script src="api-base.js"></script>
+  <script src="checklist-schema.js"></script>
+  <script src="analise-render.js"></script>
   <script src="analise.js"></script>
 </body>
 </html>

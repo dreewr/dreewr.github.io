@@ -1,128 +1,195 @@
-// Wizard de análise de imóvel: 4 etapas (entrada → gates → estimativas → resultado).
+// Controller da página de análise.
+//
+// Filosofia (definida pelo usuário):
+// - Tudo é editável a qualquer momento — não é wizard linear
+// - Abas livres EXCETO Entrada quando ainda não há imóvel criado
+// - Cada aba tem botão "Salvar" próprio (PATCH na API)
+// - Pré-preenchimento vem das extrações (regex + Claude); usuário ajusta
+//
+// Estado em memória: state.imovel é a fonte da verdade. PATCH sobe diff.
+
 (() => {
-  const GATE_LABELS = {
-    mercado_alvo: 'Cidade no mercado-alvo (Curitiba + RMC)',
-    leiloeiro_ok: 'Leiloeiro com nome + JUCEX',
-    comissao_ok: 'Comissão do leiloeiro = 5%',
-    prazo_pagamento_ok: 'Prazo de pagamento > 1 dia útil',
-    consolidacao: 'Consolidação averbada (extrajudicial)',
-    sem_sequestro_criminal: 'Sem sequestro criminal',
-    afs_bem_encadeadas: 'AFs sucessivas bem encadeadas',
-    cadeia_dominial_ok: 'Cadeia dominial sem lacunas',
-  };
-
   const $ = (id) => document.getElementById(id);
-  const passos = document.querySelectorAll('#passos li');
-  const etapas = document.querySelectorAll('.etapa');
-
-  // Estado em memória — sincronizado com backend ao salvar
   const state = { imovel: null };
 
-  function irPara(n) {
-    passos.forEach(li => li.classList.toggle('ativo', Number(li.dataset.step) === n));
-    etapas.forEach(et => et.hidden = Number(et.dataset.step) !== n);
+  const ABAS = ['entrada', 'edital', 'matricula', 'processos', 'viabilidade', 'arrematacao'];
+
+  // ---------- Navegação por abas ----------
+
+  function setAbasHabilitadas(habilitar) {
+    document.querySelectorAll('.aba-tab').forEach(tab => {
+      if (tab.dataset.tab === 'entrada') return; // entrada sempre habilitada
+      tab.disabled = !habilitar;
+    });
+  }
+
+  function irPara(nomeAba) {
+    document.querySelectorAll('.aba-tab').forEach(tab => {
+      const ativo = tab.dataset.tab === nomeAba;
+      tab.classList.toggle('ativo', ativo);
+      tab.setAttribute('aria-selected', ativo ? 'true' : 'false');
+    });
+    document.querySelectorAll('.aba-conteudo').forEach(sec => {
+      sec.hidden = sec.dataset.tabContent !== nomeAba;
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function renderMarkdown(elId, md) {
-    const el = $(elId);
-    if (!md) { el.innerHTML = '<p class="placeholder">Sem dados.</p>'; return; }
-    el.innerHTML = window.marked ? marked.parse(md) : `<pre>${md}</pre>`;
+  document.querySelectorAll('.aba-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      if (tab.disabled) return;
+      irPara(tab.dataset.tab);
+    });
+  });
+
+  // ---------- Renderiza cada aba a partir do schema + estado do imóvel ----------
+
+  function renderTodasAbas() {
+    ABAS.forEach(aba => {
+      if (aba === 'entrada') return;
+      const container = document.querySelector(`[data-checklist="${aba}"]`);
+      if (!container) return;
+      container.innerHTML = window.AnaliseRender.renderAba(aba, state.imovel);
+      window.AnaliseRender.aplicarCondicionais(aba);
+    });
   }
 
-  function gateBadge(valor) {
-    if (valor === true) return '<span class="gate gate-ok">✅ OK</span>';
-    if (valor === false) return '<span class="gate gate-fail">❌ Falhou</span>';
-    return '<span class="gate gate-pending">⏳ Sem info</span>';
-  }
+  // Cada mudança em radio dispara reavaliação de condicionais
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('input[type="radio"]')) {
+      const containerAba = e.target.closest('[data-checklist]');
+      if (containerAba) {
+        window.AnaliseRender.aplicarCondicionais(containerAba.dataset.checklist);
+      }
+      // Reset do indicador "salvo"
+      const abaSec = e.target.closest('[data-tab-content]');
+      if (abaSec) {
+        const statusEl = document.querySelector(`[data-status-salvo="${abaSec.dataset.tabContent}"]`);
+        if (statusEl) statusEl.hidden = true;
+      }
+    }
+  });
 
-  function renderGates(imovel) {
-    const todos = { ...(imovel.edital?.gates || {}), ...(imovel.matricula?.gates || {}) };
-    const linhas = Object.entries(todos).map(([k, v]) => {
-      const label = GATE_LABELS[k] || k;
-      return `<div class="gate-linha">${gateBadge(v)} <span>${label}</span></div>`;
-    }).join('');
-    const algumFalhou = Object.values(todos).some(v => v === false);
-    const avisoFalhou = algumFalhou ? '<p class="aviso-falha">⚠️ Um ou mais gates falharam — recomenda-se descartar.</p>' : '';
-    $('gates').innerHTML = avisoFalhou + linhas;
-    $('btn-para-estimativas').disabled = algumFalhou;
-  }
+  // ---------- Salvar uma aba (PATCH no JSON do imóvel) ----------
 
-  function fmtBRL(v) {
-    if (v === null || v === undefined || v === '') return '—';
-    return Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
-  }
-
-  function fmtPerc(v) {
-    if (v === null || v === undefined || v === '') return '—';
-    return Number(v).toFixed(2).replace('.', ',') + '%';
-  }
-
-  function renderResultado(viab) {
-    const ok = viab.resultado === 'passa';
-    $('resultado-viab').innerHTML = `
-      <div class="resultado-box ${ok ? 'ok' : 'fail'}">
-        <p class="resultado-titulo">${ok ? '✅ Viabilidade passa' : '❌ Não fecha em 30%'}</p>
-        <table class="resultado-tabela">
-          <tr><th>Lucro líquido</th><td>${fmtPerc(viab.lucro_perc)} (${fmtBRL(viab.lucro_rs)})</td></tr>
-          <tr><th>Lucro mensal</th><td>${fmtPerc(viab.lucro_mensal_perc)}</td></tr>
-          <tr><th>Lance máximo p/ 30%</th><td>${fmtBRL(viab.lance_maximo)}</td></tr>
-          <tr><th>Custo total</th><td>${fmtBRL(viab.total_custo)}</td></tr>
-          <tr><th>Venda líquida</th><td>${fmtBRL(viab.valor_real_venda)}</td></tr>
-        </table>
-      </div>`;
-  }
-
-  function renderPendentes(pendentes) {
-    if (!pendentes || pendentes.length === 0) {
-      $('lista-pendentes').innerHTML = '<li>Nada pendente nos gates iniciais. Próxima fase: deepdive (Fase 2 do guia).</li>';
+  async function salvarAba(nomeAba) {
+    if (!state.imovel) {
+      alert('Salve o imóvel primeiro (aba Entrada).');
       return;
     }
-    $('lista-pendentes').innerHTML = pendentes.map(p => `<li>${p}</li>`).join('');
+    const dadosAba = window.AnaliseRender.coletarAba(nomeAba);
+
+    // Merge: state.imovel.checklist[aba] = dadosAba
+    const checklistAtual = state.imovel.checklist || {};
+    checklistAtual[nomeAba] = dadosAba;
+
+    const patch = { checklist: checklistAtual };
+
+    const btn = document.querySelector(`.btn-salvar-aba[data-aba="${nomeAba}"]`);
+    const statusEl = document.querySelector(`[data-status-salvo="${nomeAba}"]`);
+    btn.disabled = true;
+    btn.textContent = 'Salvando…';
+
+    try {
+      const resp = await fetch(`${window.API_BASE}/api/imoveis/${encodeURIComponent(state.imovel.id)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch),
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      state.imovel = await resp.json();
+      if (statusEl) {
+        statusEl.hidden = false;
+        setTimeout(() => { statusEl.hidden = true; }, 2500);
+      }
+    } catch (e) {
+      alert('Falhou ao salvar: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Salvar alterações';
+    }
   }
 
-  // -- Carregar imóvel existente (?id=...) --
+  document.querySelectorAll('.btn-salvar-aba').forEach(btn => {
+    btn.addEventListener('click', () => salvarAba(btn.dataset.aba));
+  });
+
+  // ---------- Carrega imóvel existente (?id=...) ----------
+
   async function carregarSeId() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     if (!id) return;
 
     const resp = await fetch(`${window.API_BASE}/api/imoveis/${encodeURIComponent(id)}`);
-    // (carregar imóvel existente da lista)
     if (!resp.ok) {
       $('erro-analise').textContent = 'Imóvel não encontrado.';
       $('erro-analise').hidden = false;
       return;
     }
     state.imovel = await resp.json();
-    preencherForms();
-    renderMarkdown('md-edital', state.imovel.edital?.markdown);
-    renderMarkdown('md-matricula', state.imovel.matricula?.markdown);
-    renderGates(state.imovel);
-    irPara(2);
+    aoCarregarImovel(true);
   }
 
-  function preencherForms() {
-    const i = state.imovel;
-    if (!i) return;
-    $('link-imovel').value = i.link || '';
-    // Arquivos PDF não são pré-preenchidos (browser não permite por segurança)
-
-    const e = i.estimativas || {};
-    if (e.valor_mercado) $('valor-mercado').value = e.valor_mercado;
-    if (e.iptu_mensal) $('iptu').value = e.iptu_mensal;
-    if (e.condominio_mensal) $('condominio').value = e.condominio_mensal;
-
-    const v = i.viabilidade || {};
-    if (v.valor_arrematacao) $('valor-arrematacao').value = v.valor_arrematacao;
+  function aoCarregarImovel(jaExistia) {
+    setAbasHabilitadas(true);
+    atualizarTitulo();
+    atualizarAnexos();
+    renderTodasAbas();
+    if (jaExistia) {
+      const b = $('cache-banner');
+      b.innerHTML = `📦 Imóvel já analisado em ${new Date(state.imovel.atualizado_em).toLocaleString('pt-BR')} — retomando do estado salvo.`;
+      b.hidden = false;
+      irPara('edital');
+    } else {
+      irPara('edital');
+    }
   }
 
-  // -- Etapa 1 → Análise --
+  function atualizarTitulo() {
+    const t = $('titulo-imovel');
+    const end = state.imovel?.edital?.extraido?.endereco
+              || state.imovel?.matricula?.extraido?.endereco_completo
+              || state.imovel?.id;
+    if (end) t.textContent = end;
+  }
+
+  function atualizarAnexos() {
+    if (!state.imovel) return;
+    $('entrada-pdfs').hidden = false;
+
+    const editalUrl = state.imovel?.edital?.pdf_url;
+    const linkEdital = $('link-pdf-edital');
+    if (editalUrl) {
+      linkEdital.href = window.API_BASE + editalUrl;
+      linkEdital.hidden = false;
+    }
+
+    const matriculaUrl = state.imovel?.matricula?.pdf_url;
+    const linkMatricula = $('link-pdf-matricula');
+    if (matriculaUrl) {
+      linkMatricula.href = window.API_BASE + matriculaUrl;
+      linkMatricula.hidden = false;
+    }
+
+    const link = state.imovel?.link;
+    const linkAnuncio = $('link-anuncio-salvo');
+    if (link) {
+      linkAnuncio.href = link;
+      linkAnuncio.hidden = false;
+    }
+
+    // Pré-preenche o campo de link na Entrada também
+    if (link) $('link-imovel').value = link;
+  }
+
+  // ---------- Submit da Entrada (cria imóvel novo) ----------
+
   $('btn-analisar').addEventListener('click', async () => {
     const arqEdital = $('arq-edital').files[0];
     const arqMatricula = $('arq-matricula').files[0];
     if (!arqEdital && !arqMatricula) {
-      $('erro-analise').textContent = 'Anexe o edital e/ou a matrícula em PDF.';
+      $('erro-analise').textContent = 'Anexe pelo menos o edital ou a matrícula em PDF.';
       $('erro-analise').hidden = false;
       return;
     }
@@ -140,19 +207,8 @@
       const resp = await fetch(`${window.API_BASE}/api/analisar`, { method: 'POST', body: fd });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.erro || `Erro ${resp.status}`);
-
       state.imovel = data.imovel;
-
-      if (data.cache_hit) {
-        const b = $('cache-banner');
-        b.innerHTML = `📦 Imóvel já analisado em ${new Date(data.imovel.atualizado_em).toLocaleString('pt-BR')} — retomando do cache.`;
-        b.hidden = false;
-      }
-
-      renderMarkdown('md-edital', state.imovel.edital?.markdown);
-      renderMarkdown('md-matricula', state.imovel.matricula?.markdown);
-      renderGates(state.imovel);
-      irPara(2);
+      aoCarregarImovel(data.cache_hit);
     } catch (e) {
       $('erro-analise').textContent = 'Falhou: ' + e.message;
       $('erro-analise').hidden = false;
@@ -162,23 +218,24 @@
     }
   });
 
-  // -- Etapa 2 → ações --
-  $('btn-descartar').addEventListener('click', async () => {
-    if (!state.imovel) return;
-    state.imovel.status = 'descartado';
-    await salvarImovel();
-    window.location.href = '/imoveis';
-  });
-
-  $('btn-para-estimativas').addEventListener('click', () => irPara(3));
-
-  // -- Etapa 3 → calcular --
-  $('btn-voltar-2').addEventListener('click', () => irPara(2));
+  // ---------- Calcular viabilidade ----------
 
   $('btn-calcular').addEventListener('click', async () => {
+    if (!state.imovel) {
+      alert('Carregue um imóvel primeiro.');
+      return;
+    }
+    const dados = window.AnaliseRender.coletarAba('viabilidade');
+    const valorVenda = dados.valor_mercado?.valor;
+    const lance = dados.lance_pretendido?.valor;
+    if (!valorVenda || !lance) {
+      alert('Preencha valor de mercado e lance pretendido na aba Viabilidade.');
+      return;
+    }
+
     const entradas = {
-      valor_arrematacao: Number($('valor-arrematacao').value),
-      valor_venda: Number($('valor-mercado').value),
+      valor_arrematacao: lance,
+      valor_venda: valorVenda,
       comissao_leiloeiro_perc: Number($('comissao-leiloeiro').value),
       itbi_perc: Number($('itbi').value),
       registro: Number($('registro').value),
@@ -186,13 +243,10 @@
       reforma: Number($('reforma').value),
       outros: Number($('outros').value),
       prazo_venda_meses: Number($('prazo').value),
-      iptu_mensal: Number($('iptu').value),
-      condominio_mensal: Number($('condominio').value),
+      iptu_mensal: dados.iptu_mensal?.valor || 0,
+      condominio_mensal: dados.condominio_mensal?.valor || 0,
     };
-    if (!entradas.valor_arrematacao || !entradas.valor_venda) {
-      alert('Preencha valor de mercado e valor da arrematação.');
-      return;
-    }
+
     const resp = await fetch(`${window.API_BASE}/api/calcular`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -200,48 +254,29 @@
     });
     const viab = await resp.json();
 
-    // Salva no estado
-    state.imovel = state.imovel || {};
-    state.imovel.estimativas = {
-      valor_mercado: entradas.valor_venda,
-      iptu_mensal: entradas.iptu_mensal,
-      condominio_mensal: entradas.condominio_mensal,
-    };
-    state.imovel.viabilidade = { ...viab, valor_arrematacao: entradas.valor_arrematacao };
-
-    if (viab.resultado === 'passa') {
-      state.imovel.status = 'fase1_passou';
-    } else {
-      state.imovel.status = 'viabilidade_nao_fecha';
-    }
-
-    renderResultado(viab);
-    renderPendentes(state.imovel.pendentes);
-    irPara(4);
+    const ok = viab.resultado === 'passa';
+    $('resultado-viab').innerHTML = `
+      <div class="resultado-box ${ok ? 'ok' : 'fail'}">
+        <p class="resultado-titulo">${ok ? '✅ Viabilidade passa em 30%' : '❌ Não fecha em 30%'}</p>
+        <table class="resultado-tabela">
+          <tr><th>Lucro líquido</th><td>${fmtPerc(viab.lucro_perc)} (${fmtBRL(viab.lucro_rs)})</td></tr>
+          <tr><th>Lucro mensal</th><td>${fmtPerc(viab.lucro_mensal_perc)}</td></tr>
+          <tr><th>Lance máximo p/ 30%</th><td>${fmtBRL(viab.lance_maximo)}</td></tr>
+          <tr><th>Custo total</th><td>${fmtBRL(viab.total_custo)}</td></tr>
+          <tr><th>Venda líquida</th><td>${fmtBRL(viab.valor_real_venda)}</td></tr>
+        </table>
+      </div>`;
   });
 
-  // -- Etapa 4 → salvar --
-  $('btn-voltar-3').addEventListener('click', () => irPara(3));
-
-  $('btn-salvar').addEventListener('click', async () => {
-    await salvarImovel();
-    window.location.href = '/imoveis';
-  });
-
-  async function salvarImovel() {
-    if (!state.imovel) return;
-    const resp = await fetch(`${window.API_BASE}/api/imoveis`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(state.imovel),
-    });
-    if (!resp.ok) {
-      const erro = await resp.json().catch(() => ({}));
-      alert('Erro ao salvar: ' + (erro.erro || resp.status));
-      throw new Error('save failed');
-    }
-    state.imovel = await resp.json();
+  function fmtBRL(v) {
+    if (v == null || v === '') return '—';
+    return Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+  }
+  function fmtPerc(v) {
+    if (v == null || v === '') return '—';
+    return Number(v).toFixed(2).replace('.', ',') + '%';
   }
 
+  // ---------- Init ----------
   carregarSeId();
 })();

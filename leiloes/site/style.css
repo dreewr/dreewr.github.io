@@ -1167,3 +1167,202 @@ dialog#dlg-config::backdrop {
   display: flex; gap: 0.5rem; justify-content: flex-end;
   margin-top: 1.25rem;
 }
+
+/* ---------- Abas (checklist viva) ---------- */
+
+.abas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 2px solid var(--color-border, #ddd);
+  margin: 1.5rem 0 1rem;
+  padding: 0 0.25rem;
+}
+.aba-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--color-fg-muted, #666);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.aba-tab:hover:not(:disabled) {
+  background: var(--color-bg-soft, #f4f4f4);
+  color: var(--color-fg, #111);
+}
+.aba-tab.ativo {
+  background: var(--color-bg, #fff);
+  color: var(--color-fg, #111);
+  border-color: var(--color-border, #ddd);
+  border-bottom: 2px solid var(--color-bg, #fff);
+  margin-bottom: -2px;
+  font-weight: 600;
+}
+.aba-tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.aba-conteudo {
+  padding-top: 0.5rem;
+}
+.aba-conteudo[hidden] { display: none !important; }
+
+/* ---------- Item do checklist ---------- */
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.item-checklist {
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background: var(--color-bg, #fff);
+}
+.item-checklist[hidden] { display: none !important; }
+
+.item-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.item-label {
+  font-weight: 500;
+  line-height: 1.35;
+  flex: 1;
+}
+.fonte-tag {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted, #888);
+  background: var(--color-bg-soft, #f4f4f4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  cursor: help;
+}
+
+.item-input { margin: 0.5rem 0; }
+
+/* Tri-estado (✅/❌/⏳) */
+.grupo-tri {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--color-bg-soft, #f4f4f4);
+  padding: 3px;
+  border-radius: 6px;
+}
+.radio-tri {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.12s;
+}
+.radio-tri:hover { background: rgba(0,0,0,0.04); }
+.radio-tri input { display: none; }
+.radio-tri.sel-ok { background: #e3f5e3; color: #1d6e1d; }
+.radio-tri.sel-fail { background: #fde2e1; color: #b00020; }
+.radio-tri.sel-pendente { background: #fff4d6; color: #8a6d1a; }
+
+/* Radio múltiplas opções */
+.grupo-radio {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.radio-opcao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.radio-opcao:hover { background: var(--color-bg-soft, #f7f7f7); }
+.radio-opcao.sel {
+  background: var(--color-bg-soft, #eef);
+  font-weight: 500;
+}
+
+.input-numero, .input-texto {
+  width: 100%;
+  max-width: 320px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+/* Ajuda colapsável */
+.item-ajuda {
+  margin-top: 0.6rem;
+  font-size: 0.88rem;
+  border-top: 1px dashed var(--color-border, #e0e0e0);
+  padding-top: 0.6rem;
+}
+.item-ajuda summary {
+  cursor: pointer;
+  color: var(--color-fg-muted, #666);
+  font-size: 0.85rem;
+}
+.item-ajuda summary:hover { color: var(--color-fg, #111); }
+.item-ajuda[open] summary { margin-bottom: 0.4rem; }
+.item-ajuda p { margin: 0.4rem 0; line-height: 1.45; }
+.item-ajuda .fonte-tag { display: inline-block; margin-top: 0.3rem; }
+
+/* Ações da aba */
+.acoes-aba {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.status-salvo {
+  color: #1d6e1d;
+  font-size: 0.9rem;
+}
+
+/* Anexos */
+.lista-anexos {
+  list-style: none;
+  padding: 0;
+}
+.lista-anexos li { margin: 0.4rem 0; }
+
+/* Custos arrematação */
+.custos-arrematacao {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+}
+.custos-arrematacao legend {
+  padding: 0 0.5rem;
+  font-weight: 500;
+  color: var(--color-fg-muted, #666);
+}
+.custos-arrematacao label {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.9rem;
+  color: var(--color-fg-muted, #555);
+}
+.custos-arrematacao input {
+  width: 100%;
+  max-width: 200px;
+  padding: 5px 8px;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 4px;
+}
