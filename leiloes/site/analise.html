@@ -80,6 +80,16 @@
           <li><a id="link-pdf-matricula" href="#" target="_blank" rel="noopener" hidden>📜 Ver matrícula salva</a></li>
           <li><a id="link-anuncio-salvo" href="#" target="_blank" rel="noopener" hidden>🔗 Página do leiloeiro</a></li>
         </ul>
+
+        <div class="acoes acoes-aba">
+          <button type="button" id="btn-reanalisar" class="btn-secundario">
+            🔄 Re-analisar com pipeline atual
+          </button>
+          <span id="reanalisar-status" class="status-salvo" hidden></span>
+        </div>
+        <p class="dica" style="margin-top: 0.5rem;">
+          Re-executa a extração nos PDFs já salvos (sem precisar re-uploadar). Útil quando o pipeline foi melhorado. <strong>Preserva</strong> o que você editou nas outras abas (checklist, viabilidade).
+        </p>
       </div>
     </section>
 

@@ -114,6 +114,37 @@
     btn.addEventListener('click', () => salvarAba(btn.dataset.aba));
   });
 
+  // -- Botão re-analisar (re-roda pipeline com PDFs salvos) --
+  const btnReanalisar = $('btn-reanalisar');
+  if (btnReanalisar) {
+    btnReanalisar.addEventListener('click', async () => {
+      if (!state.imovel) return;
+      if (!confirm('Re-analisar usando os PDFs já salvos? Isso atualiza a extração mas preserva o que você editou nas abas.')) return;
+
+      const status = $('reanalisar-status');
+      btnReanalisar.disabled = true;
+      btnReanalisar.textContent = '⏳ Re-analisando…';
+      status.hidden = true;
+      try {
+        const resp = await fetch(`${window.API_BASE}/api/imoveis/${encodeURIComponent(state.imovel.id)}/reanalisar`, {
+          method: 'POST',
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.erro || `HTTP ${resp.status}`);
+        state.imovel = data;
+        aoCarregarImovel(true);
+        status.textContent = '✅ Reanalisado';
+        status.hidden = false;
+        setTimeout(() => { status.hidden = true; }, 4000);
+      } catch (e) {
+        alert('Falhou: ' + e.message);
+      } finally {
+        btnReanalisar.disabled = false;
+        btnReanalisar.textContent = '🔄 Re-analisar com pipeline atual';
+      }
+    });
+  }
+
   // ---------- Carrega imóvel existente (?id=...) ----------
 
   async function carregarSeId() {
