@@ -131,11 +131,32 @@
     aoCarregarImovel(true);
   }
 
+  function avisosDeErroExtracao() {
+    const ed = state.imovel?.edital || {};
+    const mt = state.imovel?.matricula || {};
+    const itens = [];
+    if (ed.erro) itens.push(`<li><strong>Edital:</strong> ${ed.erro} <em>(caiu em regex puro — campos incompletos)</em></li>`);
+    if (mt.erro) itens.push(`<li><strong>Matrícula:</strong> ${mt.erro} <em>(caiu em regex puro — campos incompletos)</em></li>`);
+    if (ed.fonte_pdf === 'pdf_digital_curto' && ed.aviso) itens.push(`<li><strong>Edital PDF:</strong> ${ed.aviso}</li>`);
+    if (mt.fonte_pdf === 'pdf_digital_curto' && mt.aviso) itens.push(`<li><strong>Matrícula PDF:</strong> ${mt.aviso}</li>`);
+
+    const wrap = document.getElementById('avisos-pipeline');
+    if (!wrap) return;
+    if (!itens.length) { wrap.hidden = true; return; }
+    wrap.innerHTML = `
+      <h3>⚠️ Atenção: o pipeline teve problemas</h3>
+      <ul>${itens.join('')}</ul>
+      <p class="dica">Você pode preencher os campos manualmente nas abas — eles estão editáveis. Os PDFs ficaram salvos pra você revisar.</p>
+    `;
+    wrap.hidden = false;
+  }
+
   function aoCarregarImovel(jaExistia) {
     setAbasHabilitadas(true);
     atualizarTitulo();
     atualizarAnexos();
     atualizarValidacoes();
+    avisosDeErroExtracao();
     renderTodasAbas();
     if (jaExistia) {
       const b = $('cache-banner');
