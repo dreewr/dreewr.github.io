@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leilões — Analisar imóvel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-page">
+  <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+
+  <header class="site-header" role="banner">
+    <div class="header-left">
+      <h1 class="site-title">Analisar imóvel</h1>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="header-link" id="btn-configurar">⚙ Backend</button>
+      <a class="header-link" href="imoveis.html">← Voltar para a lista</a>
+    </div>
+  </header>
+
+  <main id="main-content" class="app-main wizard" tabindex="-1">
+
+    <ol class="passos" id="passos">
+      <li data-step="1" class="ativo">1. Entrada</li>
+      <li data-step="2">2. Gates Fase 1</li>
+      <li data-step="3">3. Estimativas</li>
+      <li data-step="4">4. Resultado</li>
+    </ol>
+
+    <!-- ETAPA 1 — entrada -->
+    <section class="etapa" data-step="1">
+      <h2>Cole os documentos do imóvel</h2>
+      <p class="dica">Cole o texto do edital e da matrícula. A análise leva 1–3 minutos.</p>
+
+      <div id="cache-banner" class="banner banner-info" hidden></div>
+
+      <label for="apelido">Apelido (opcional)</label>
+      <input type="text" id="apelido" placeholder="Ex: Apto Batel 2q" />
+
+      <label for="texto-edital">Texto do edital</label>
+      <textarea id="texto-edital" rows="12" placeholder="Cole o texto do edital aqui…"></textarea>
+
+      <label for="texto-matricula">Texto da matrícula</label>
+      <textarea id="texto-matricula" rows="12" placeholder="Cole o texto da matrícula aqui…"></textarea>
+
+      <div class="acoes">
+        <button type="button" id="btn-analisar" class="btn-primario">Analisar</button>
+        <span id="loading" class="loading" hidden>⏳ Analisando…</span>
+      </div>
+
+      <p id="erro-analise" class="erro" hidden></p>
+    </section>
+
+    <!-- ETAPA 2 — gates -->
+    <section class="etapa" data-step="2" hidden>
+      <h2>Gates da Fase 1</h2>
+      <p class="dica">Cada item abaixo elimina o imóvel se falhar. Confira o que a IA extraiu.</p>
+
+      <div id="gates"></div>
+
+      <details>
+        <summary>Ver relatório completo do edital</summary>
+        <div id="md-edital" class="markdown-out"></div>
+      </details>
+
+      <details>
+        <summary>Ver relatório completo da matrícula</summary>
+        <div id="md-matricula" class="markdown-out"></div>
+      </details>
+
+      <div class="acoes">
+        <button type="button" id="btn-descartar" class="btn-destrutivo">Descartar imóvel</button>
+        <button type="button" id="btn-para-estimativas" class="btn-primario">Continuar →</button>
+      </div>
+    </section>
+
+    <!-- ETAPA 3 — estimativas -->
+    <section class="etapa" data-step="3" hidden>
+      <h2>Estimativas rápidas</h2>
+      <p class="dica">Preencha com valores aproximados — refina depois.</p>
+
+      <label for="valor-mercado">Valor de mercado estimado (R$)</label>
+      <input type="number" id="valor-mercado" min="0" step="1000" placeholder="350000" />
+
+      <label for="valor-arrematacao">Valor da arrematação pretendido (R$)</label>
+      <input type="number" id="valor-arrematacao" min="0" step="1000" placeholder="210000" />
+
+      <label for="iptu">IPTU mensal estimado (R$)</label>
+      <input type="number" id="iptu" min="0" step="10" placeholder="150" />
+
+      <label for="condominio">Condomínio mensal estimado (R$)</label>
+      <input type="number" id="condominio" min="0" step="50" placeholder="500" />
+
+      <fieldset>
+        <legend>Custos da arrematação (defaults aceitáveis)</legend>
+
+        <label for="comissao-leiloeiro">Comissão do leiloeiro (%)</label>
+        <input type="number" id="comissao-leiloeiro" min="0" step="0.1" value="5" />
+
+        <label for="itbi">ITBI (%) — Curitiba 2,7</label>
+        <input type="number" id="itbi" min="0" step="0.1" value="2.7" />
+
+        <label for="registro">Registro + escritura (R$)</label>
+        <input type="number" id="registro" min="0" step="100" value="2500" />
+
+        <label for="advogado">Advogado (R$) — pior caso 4500</label>
+        <input type="number" id="advogado" min="0" step="100" value="4500" />
+
+        <label for="reforma">Reforma (R$)</label>
+        <input type="number" id="reforma" min="0" step="500" value="10000" />
+
+        <label for="outros">Outros (R$)</label>
+        <input type="number" id="outros" min="0" step="100" value="1500" />
+
+        <label for="prazo">Prazo até a venda (meses)</label>
+        <input type="number" id="prazo" min="1" step="1" value="12" />
+      </fieldset>
+
+      <div class="acoes">
+        <button type="button" id="btn-voltar-2" class="btn-secundario">← Voltar</button>
+        <button type="button" id="btn-calcular" class="btn-primario">Calcular viabilidade</button>
+      </div>
+    </section>
+
+    <!-- ETAPA 4 — resultado -->
+    <section class="etapa" data-step="4" hidden>
+      <h2>Resultado</h2>
+
+      <div id="resultado-viab" class="resultado"></div>
+
+      <h3>O que ainda falta avaliar</h3>
+      <ul id="lista-pendentes" class="pendentes"></ul>
+
+      <div class="acoes">
+        <button type="button" id="btn-voltar-3" class="btn-secundario">← Ajustar estimativas</button>
+        <button type="button" id="btn-salvar" class="btn-primario">Salvar e voltar à lista</button>
+      </div>
+    </section>
+
+  </main>
+
+  <dialog id="dlg-config">
+    <form method="dialog" class="dlg-form">
+      <h3>Configurar backend</h3>
+      <p class="dica">URL do servidor Flask na sua casa. Em branco = mesma origem.</p>
+      <label for="cfg-url">URL</label>
+      <input type="text" id="cfg-url" placeholder="http://192.168.0.10:9000 ou https://tunel.ngrok.io" />
+      <p class="dica" id="cfg-current"></p>
+      <menu>
+        <button type="button" id="cfg-cancelar" class="btn-secundario">Cancelar</button>
+        <button type="button" id="cfg-salvar" class="btn-primario">Salvar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="vendor/marked.min.js"></script>
+  <script src="config.js"></script>
+  <script src="analise.js"></script>
+</body>
+</html>
