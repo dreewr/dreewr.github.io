@@ -554,150 +554,286 @@ body {
 
 /* ============================================================
    App pages (imoveis, analise) — wizard e listagem
+   Reusa as mesmas variáveis CSS do viewer (--color-*).
    ============================================================ */
 
-body.app-page {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+:root {
+  --color-accent:        #1a4ea3;
+  --color-accent-hover:  #143f88;
+  --color-accent-fg:     #ffffff;
+  --color-ok-bg:         #d4f4dd;
+  --color-ok-fg:         #0f4a1d;
+  --color-ok-border:     #6db680;
+  --color-warn-bg:       #fff4d0;
+  --color-warn-fg:       #5c4000;
+  --color-warn-border:   #d4b246;
+  --color-fail-bg:       #fcdada;
+  --color-fail-fg:       #7a1717;
+  --color-fail-border:   #d47373;
+  --color-neutro-bg:     #ececdc;
+  --color-neutro-fg:     #4a4a4a;
+}
+:root[data-theme="dark"],
+:root:not([data-theme="light"]) {
+  --color-accent:        #5a8fff;
+  --color-accent-hover:  #7aa5ff;
+  --color-accent-fg:     #0a1422;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-ok-bg:     #1a3a25;
+    --color-ok-fg:     #b6e9c4;
+    --color-ok-border: #2d6e44;
+    --color-warn-bg:   #3d2f00;
+    --color-warn-fg:   #ffd56b;
+    --color-warn-border: #806010;
+    --color-fail-bg:   #3d1414;
+    --color-fail-fg:   #ffb4b4;
+    --color-fail-border: #802020;
+    --color-neutro-bg: #25292e;
+    --color-neutro-fg: #b8b8b0;
+  }
 }
 
-.app-main {
+body.app-page {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  margin: 0;
+  min-height: 100vh;
+}
+/* HTML hidden attribute deve ganhar de qualquer display: flex/grid das app pages. */
+body.app-page [hidden] { display: none !important; }
+
+body.app-page .app-main {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 1.5rem 1.25rem 4rem;
+  padding: 2rem 1.25rem 4rem;
 }
+
+/* ----- Header (botões/links de ação) ----- */
 
 .header-actions .header-link {
-  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-fg);
+  background: var(--color-button-bg);
   text-decoration: none;
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem 0.85rem;
   border-radius: 6px;
-  border: 1px solid var(--border, #d0d0d0);
-  font-size: 0.95rem;
-  margin-left: 0.5rem;
+  border: 1px solid var(--color-border);
+  font: inherit;
+  font-size: var(--font-small);
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 .header-actions .header-link:hover {
-  background: var(--hover, #f0f0f0);
+  background: var(--color-button-hover);
 }
 .header-actions .header-link.primary {
-  background: var(--accent, #1968d2);
-  color: white;
-  border-color: var(--accent, #1968d2);
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent);
 }
 .header-actions .header-link.primary:hover {
-  filter: brightness(1.1);
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
-/* ----- Listagem ----- */
+/* ----- Toolbar (listagem) ----- */
 
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
 }
-.toolbar-left, .toolbar-right { display: flex; gap: 0.5rem; align-items: center; }
-.contagem { color: var(--muted, #666); font-size: 0.9rem; }
+.toolbar-left,
+.toolbar-right { display: flex; gap: 0.75rem; align-items: center; }
+.toolbar-left label { font-weight: 600; }
+.toolbar select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-button-bg);
+  color: var(--color-fg);
+  font: inherit;
+  font-size: var(--font-small);
+}
+.contagem {
+  color: var(--color-fg-muted);
+  font-size: var(--font-small);
+  padding-left: 0.5rem;
+  border-left: 1px solid var(--color-border);
+}
+
+/* ----- Lista vazia / estado vazio ----- */
+
+.placeholder {
+  text-align: center;
+  color: var(--color-fg-muted);
+  font-size: 1.1rem;
+  padding: 3rem 1rem;
+  background: var(--color-quote-bg);
+  border: 1px dashed var(--color-border);
+  border-radius: 8px;
+}
+.placeholder a {
+  color: var(--color-link);
+  font-weight: 600;
+}
+
+/* ----- Tabela de imóveis ----- */
 
 .lista-imoveis {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 0.5rem;
+  background: var(--color-button-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
 }
-.lista-imoveis th, .lista-imoveis td {
-  padding: 0.6rem 0.8rem;
+.lista-imoveis th,
+.lista-imoveis td {
+  padding: 0.85rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--border, #e0e0e0);
+  border-bottom: 1px solid var(--color-border);
 }
 .lista-imoveis th {
-  background: var(--bg-soft, #f6f6f6);
+  background: var(--color-table-head);
+  font-weight: 700;
+  font-size: var(--font-small);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+}
+.lista-imoveis tbody tr:nth-child(even) {
+  background: var(--color-table-stripe);
+}
+.lista-imoveis tbody tr:hover {
+  background: var(--color-button-hover);
+}
+.lista-imoveis tbody tr:last-child td { border-bottom: 0; }
+.lista-imoveis a {
+  color: var(--color-link);
+  text-decoration: none;
   font-weight: 600;
-  font-size: 0.9rem;
 }
-.lista-imoveis tr:hover {
-  background: var(--hover, #f9f9f9);
-}
-.lista-imoveis a { color: var(--accent, #1968d2); text-decoration: none; }
 .lista-imoveis a:hover { text-decoration: underline; }
+
+/* ----- Paginação ----- */
 
 .paginacao {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 .paginacao button {
-  padding: 0.4rem 0.8rem;
-  background: var(--bg-soft, #f6f6f6);
-  border: 1px solid var(--border, #d0d0d0);
+  padding: 0.5rem 1rem;
+  background: var(--color-button-bg);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   cursor: pointer;
+  font: inherit;
+  font-size: var(--font-small);
+}
+.paginacao button:hover:not(:disabled) {
+  background: var(--color-button-hover);
 }
 .paginacao button:disabled { opacity: 0.4; cursor: not-allowed; }
+#pag-info {
+  color: var(--color-fg-muted);
+  font-size: var(--font-small);
+}
 
-/* ----- Badges ----- */
+/* ----- Badges (status) ----- */
 
 .badge {
   display: inline-block;
-  padding: 0.15rem 0.55rem;
+  padding: 0.2rem 0.65rem;
   border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
   white-space: nowrap;
+  border: 1px solid;
 }
-.badge-ok       { background: #d4f4dd; color: #135523; }
-.badge-pendente { background: #fff4d0; color: #6b4a00; }
-.badge-fail     { background: #fcdada; color: #8a1b1b; }
-.badge-neutro   { background: #e6e6e6; color: #444; }
+.badge-ok       { background: var(--color-ok-bg);     color: var(--color-ok-fg);     border-color: var(--color-ok-border); }
+.badge-pendente { background: var(--color-warn-bg);   color: var(--color-warn-fg);   border-color: var(--color-warn-border); }
+.badge-fail     { background: var(--color-fail-bg);   color: var(--color-fail-fg);   border-color: var(--color-fail-border); }
+.badge-neutro   { background: var(--color-neutro-bg); color: var(--color-neutro-fg); border-color: var(--color-border); }
 
-@media (prefers-color-scheme: dark) {
-  .badge-ok       { background: #1a4029; color: #b6e9c4; }
-  .badge-pendente { background: #4d3a00; color: #ffe296; }
-  .badge-fail     { background: #4d1717; color: #ffb4b4; }
-  .badge-neutro   { background: #333; color: #ccc; }
-}
-
-/* ----- Wizard ----- */
+/* ----- Wizard — passos ----- */
 
 .passos {
   list-style: none;
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
   padding: 0;
-  margin: 0 0 1.5rem 0;
-  flex-wrap: wrap;
+  margin: 0 0 2rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-button-bg);
 }
 .passos li {
-  padding: 0.5rem 1rem;
-  background: var(--bg-soft, #f0f0f0);
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: var(--muted, #666);
-  border: 1px solid transparent;
-}
-.passos li.ativo {
-  background: var(--accent, #1968d2);
-  color: white;
+  flex: 1;
+  padding: 0.85rem 1rem;
+  font-size: var(--font-small);
+  color: var(--color-fg-muted);
   font-weight: 600;
+  text-align: center;
+  border-right: 1px solid var(--color-border);
+  position: relative;
+}
+.passos li:last-child { border-right: 0; }
+.passos li.ativo {
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  font-weight: 700;
 }
 
+/* ----- Etapa (card) ----- */
+
 .etapa {
-  background: var(--bg-soft, #fafafa);
-  padding: 1.5rem;
+  background: var(--color-button-bg);
+  padding: 2rem;
   border-radius: 8px;
-  border: 1px solid var(--border, #e0e0e0);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
-.etapa h2 { margin-top: 0; }
-.etapa .dica { color: var(--muted, #666); font-size: 0.92rem; }
+.etapa h2 {
+  margin-top: 0;
+  margin-bottom: 0.3rem;
+  font-size: var(--font-h2);
+  font-weight: 700;
+}
+.etapa h3 {
+  font-size: var(--font-h3);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+.etapa .dica {
+  color: var(--color-fg-muted);
+  font-size: 0.95rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+/* ----- Inputs ----- */
 
 .etapa label {
   display: block;
-  margin-top: 1rem;
-  margin-bottom: 0.3rem;
+  margin-top: 1.1rem;
+  margin-bottom: 0.35rem;
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -706,161 +842,247 @@ body.app-page {
 .etapa textarea,
 .etapa select {
   width: 100%;
-  padding: 0.55rem 0.7rem;
+  padding: 0.65rem 0.8rem;
   font-size: 1rem;
-  border: 1px solid var(--border, #ccc);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: var(--bg, white);
-  color: var(--text, #111);
+  background: var(--color-bg);
+  color: var(--color-fg);
   font-family: inherit;
 }
-.etapa textarea { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92rem; }
-.etapa input:focus, .etapa textarea:focus, .etapa select:focus {
-  outline: 2px solid var(--accent, #1968d2);
+.etapa textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  min-height: 200px;
+}
+.etapa input:focus,
+.etapa textarea:focus,
+.etapa select:focus {
+  outline: 2px solid var(--color-focus);
   outline-offset: 1px;
 }
 
 .etapa fieldset {
-  margin-top: 1.2rem;
-  border: 1px dashed var(--border, #ccc);
+  margin-top: 1.5rem;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  padding: 0.5rem 1rem 1rem;
+  padding: 0.5rem 1.25rem 1.25rem;
+  background: var(--color-quote-bg);
 }
-.etapa fieldset legend { font-weight: 600; padding: 0 0.4rem; }
+.etapa fieldset legend {
+  font-weight: 700;
+  padding: 0 0.5rem;
+  color: var(--color-fg-muted);
+  font-size: var(--font-small);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ----- Ações (botões da etapa) ----- */
 
 .acoes {
   display: flex;
-  gap: 0.6rem;
-  margin-top: 1.5rem;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
   align-items: center;
   flex-wrap: wrap;
 }
-.btn-primario, .btn-secundario, .btn-destrutivo {
-  padding: 0.6rem 1.2rem;
+.btn-primario,
+.btn-secundario,
+.btn-destrutivo {
+  padding: 0.7rem 1.4rem;
+  font: inherit;
   font-size: 1rem;
   border-radius: 6px;
   cursor: pointer;
   border: 1px solid transparent;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.2;
 }
 .btn-primario {
-  background: var(--accent, #1968d2);
-  color: white;
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent);
 }
-.btn-primario:hover:not(:disabled) { filter: brightness(1.1); }
+.btn-primario:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
 .btn-primario:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-secundario {
-  background: var(--bg-soft, #f0f0f0);
-  color: var(--text, #111);
-  border-color: var(--border, #ccc);
+  background: var(--color-button-bg);
+  color: var(--color-fg);
+  border-color: var(--color-border);
 }
+.btn-secundario:hover { background: var(--color-button-hover); }
 .btn-destrutivo {
-  background: #fcdada;
-  color: #8a1b1b;
-  border-color: #ffb4b4;
+  background: var(--color-fail-bg);
+  color: var(--color-fail-fg);
+  border-color: var(--color-fail-border);
 }
-.btn-destrutivo:hover { filter: brightness(1.05); }
+.btn-destrutivo:hover { filter: brightness(0.95); }
 
-.loading { color: var(--muted, #666); font-size: 0.95rem; }
-.erro    { color: #8a1b1b; margin-top: 1rem; font-weight: 600; }
+.loading {
+  color: var(--color-fg-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.erro {
+  color: var(--color-fail-fg);
+  background: var(--color-fail-bg);
+  border: 1px solid var(--color-fail-border);
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+/* ----- Banners ----- */
 
 .banner {
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1.1rem;
   border-radius: 6px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-size: 0.95rem;
+  border: 1px solid;
 }
-.banner-info { background: #e0f0ff; color: #0a4a8a; }
-@media (prefers-color-scheme: dark) {
-  .banner-info { background: #0a2a4a; color: #b0d8ff; }
+.banner-info {
+  background: var(--color-warn-bg);
+  color: var(--color-warn-fg);
+  border-color: var(--color-warn-border);
 }
 
-/* ----- Gates ----- */
+/* ----- Gates (etapa 2) ----- */
 
+#gates {
+  margin-bottom: 1rem;
+}
 .gate-linha {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border, #eee);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--color-border);
 }
+.gate-linha:last-child { border-bottom: 0; }
 .gate {
   display: inline-block;
-  padding: 0.15rem 0.6rem;
+  padding: 0.25rem 0.7rem;
   border-radius: 6px;
   font-size: 0.85rem;
-  font-weight: 600;
-  min-width: 90px;
+  font-weight: 700;
+  min-width: 100px;
   text-align: center;
+  border: 1px solid;
 }
-.gate-ok      { background: #d4f4dd; color: #135523; }
-.gate-fail    { background: #fcdada; color: #8a1b1b; }
-.gate-pending { background: #fff4d0; color: #6b4a00; }
-@media (prefers-color-scheme: dark) {
-  .gate-ok      { background: #1a4029; color: #b6e9c4; }
-  .gate-fail    { background: #4d1717; color: #ffb4b4; }
-  .gate-pending { background: #4d3a00; color: #ffe296; }
-}
+.gate-ok      { background: var(--color-ok-bg);   color: var(--color-ok-fg);   border-color: var(--color-ok-border); }
+.gate-fail    { background: var(--color-fail-bg); color: var(--color-fail-fg); border-color: var(--color-fail-border); }
+.gate-pending { background: var(--color-warn-bg); color: var(--color-warn-fg); border-color: var(--color-warn-border); }
+
 .aviso-falha {
-  background: #fcdada;
-  color: #8a1b1b;
-  padding: 0.6rem 1rem;
+  background: var(--color-fail-bg);
+  color: var(--color-fail-fg);
+  border: 1px solid var(--color-fail-border);
+  padding: 0.85rem 1.1rem;
   border-radius: 6px;
   font-weight: 600;
   margin-bottom: 1rem;
 }
 
 .markdown-out {
-  font-size: 0.92rem;
-  padding: 0.5rem 1rem;
-  background: var(--bg, white);
+  font-size: 0.9rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-quote-bg);
   border-radius: 6px;
-  border: 1px solid var(--border, #eee);
+  border: 1px solid var(--color-border);
   max-height: 500px;
   overflow-y: auto;
 }
-.markdown-out table { border-collapse: collapse; }
-.markdown-out th, .markdown-out td { border: 1px solid var(--border, #ddd); padding: 0.3rem 0.6rem; }
+.markdown-out table { border-collapse: collapse; margin: 0.5rem 0; }
+.markdown-out th,
+.markdown-out td { border: 1px solid var(--color-border); padding: 0.3rem 0.6rem; }
 
-.etapa details { margin-top: 1rem; }
-.etapa summary { cursor: pointer; font-weight: 600; padding: 0.5rem 0; }
+.etapa details {
+  margin-top: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.etapa details[open] { background: var(--color-quote-bg); }
+.etapa summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.7rem 1rem;
+  background: var(--color-table-head);
+  color: var(--color-fg-muted);
+  font-size: var(--font-small);
+}
+.etapa details[open] summary {
+  border-bottom: 1px solid var(--color-border);
+}
+.etapa details .markdown-out { border: 0; border-radius: 0; max-height: 400px; }
 
-/* ----- Resultado ----- */
+/* ----- Resultado (etapa 4) ----- */
 
 .resultado-box {
-  padding: 1.2rem;
+  padding: 1.5rem;
   border-radius: 8px;
   border: 2px solid;
   margin-bottom: 1.5rem;
 }
-.resultado-box.ok   { border-color: #4caf50; background: #f0fbf2; }
-.resultado-box.fail { border-color: #e53935; background: #fdf2f2; }
-@media (prefers-color-scheme: dark) {
-  .resultado-box.ok   { background: #15291b; }
-  .resultado-box.fail { background: #2b1414; }
+.resultado-box.ok {
+  border-color: var(--color-ok-border);
+  background: var(--color-ok-bg);
+  color: var(--color-ok-fg);
+}
+.resultado-box.fail {
+  border-color: var(--color-fail-border);
+  background: var(--color-fail-bg);
+  color: var(--color-fail-fg);
 }
 .resultado-titulo {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 700;
   margin: 0 0 1rem 0;
 }
-.resultado-tabela { width: 100%; border-collapse: collapse; }
+.resultado-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.resultado-tabela th,
+.resultado-tabela td {
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+}
 .resultado-tabela th {
   text-align: left;
-  padding: 0.4rem 0.8rem 0.4rem 0;
-  width: 40%;
-  color: var(--muted, #555);
-  font-weight: 500;
+  width: 45%;
+  color: var(--color-fg-muted);
+  font-weight: 600;
+  background: var(--color-table-head);
 }
-.resultado-tabela td { padding: 0.4rem 0; font-weight: 600; }
+.resultado-tabela td { font-weight: 700; }
+.resultado-tabela tr:last-child td,
+.resultado-tabela tr:last-child th { border-bottom: 0; }
 
 .pendentes {
-  background: var(--bg, white);
-  border: 1px solid var(--border, #ddd);
+  background: var(--color-quote-bg);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 1rem 1rem 1rem 2.5rem;
+  margin-top: 0.5rem;
 }
-.pendentes li { padding: 0.3rem 0; }
+.pendentes li {
+  padding: 0.35rem 0;
+  color: var(--color-fg);
+}
 
 /* ----- Dialog de configuração ----- */
 dialog#dlg-config {
