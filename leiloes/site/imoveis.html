@@ -48,6 +48,7 @@
             <th>Lucro %</th>
             <th>Lance máx</th>
             <th>Atualizado</th>
+            <th class="col-acoes" aria-label="Ações"></th>
           </tr>
         </thead>
         <tbody id="tabela-imoveis-body"></tbody>
@@ -60,6 +61,22 @@
       </div>
     </div>
   </main>
+
+  <!-- Modal de confirmação para remoção -->
+  <div id="modal-remover" class="modal-bg" hidden>
+    <div class="modal-box" role="dialog" aria-labelledby="modal-titulo">
+      <h2 id="modal-titulo">Remover imóvel?</h2>
+      <p>
+        Isso apaga <strong>permanentemente</strong> o JSON da análise e os PDFs
+        anexos (edital e matrícula) deste imóvel. Não dá pra desfazer.
+      </p>
+      <p class="modal-id"><code id="modal-id-display"></code></p>
+      <div class="modal-acoes">
+        <button type="button" class="btn-secundario" id="modal-cancelar">Cancelar</button>
+        <button type="button" class="btn-destrutivo" id="modal-confirmar">Sim, remover</button>
+      </div>
+    </div>
+  </div>
 
   <script src="api-base.js"></script>
   <script src="imoveis.js"></script>

@@ -78,6 +78,7 @@
       const link = item.link
         ? `<a href="${item.link}" target="_blank" rel="noopener">🔗 anúncio</a>`
         : '—';
+      const idEscaped = item.id.replace(/"/g, '&quot;');
       return `
       <tr>
         <td><a href="/analise?id=${encodeURIComponent(item.id)}">${nome}</a></td>
@@ -86,6 +87,9 @@
         <td>${fmtPerc(item.lucro_perc)}</td>
         <td>${fmtBRL(item.lance_maximo)}</td>
         <td>${fmtData(item.atualizado_em)}</td>
+        <td class="col-acoes">
+          <button type="button" class="btn-icone btn-remover" data-id="${idEscaped}" aria-label="Remover imóvel" title="Remover">🗑</button>
+        </td>
       </tr>`;
     }).join('');
 
@@ -110,6 +114,57 @@
   // Exportar CSV — mesma origem do site
   document.getElementById('btn-exportar').addEventListener('click', () => {
     window.open(`${window.API_BASE}/api/exportar-csv`, '_blank');
+  });
+
+  // -- Remoção com modal de confirmação --
+  const modal = document.getElementById('modal-remover');
+  const modalIdEl = document.getElementById('modal-id-display');
+  const btnCancelar = document.getElementById('modal-cancelar');
+  const btnConfirmar = document.getElementById('modal-confirmar');
+  let idParaRemover = null;
+
+  function abrirModal(id) {
+    idParaRemover = id;
+    modalIdEl.textContent = id;
+    modal.hidden = false;
+    btnConfirmar.focus();
+  }
+
+  function fecharModal() {
+    idParaRemover = null;
+    modal.hidden = true;
+  }
+
+  // Delegação: clique no botão dentro da tabela
+  tbody.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-remover');
+    if (!btn) return;
+    e.preventDefault();
+    abrirModal(btn.dataset.id);
+  });
+
+  btnCancelar.addEventListener('click', fecharModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) fecharModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) fecharModal(); });
+
+  btnConfirmar.addEventListener('click', async () => {
+    if (!idParaRemover) return;
+    btnConfirmar.disabled = true;
+    btnConfirmar.textContent = 'Removendo…';
+    try {
+      const resp = await fetch(`${window.API_BASE}/api/imoveis/${encodeURIComponent(idParaRemover)}`, { method: 'DELETE' });
+      if (!resp.ok) {
+        const erro = await resp.json().catch(() => ({}));
+        alert('Falha ao remover: ' + (erro.erro || resp.status));
+      }
+    } catch (e) {
+      alert('Erro: ' + e.message);
+    } finally {
+      btnConfirmar.disabled = false;
+      btnConfirmar.textContent = 'Sim, remover';
+      fecharModal();
+      carregar();
+    }
   });
 
   carregar();
