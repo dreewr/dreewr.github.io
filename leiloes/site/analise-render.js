@@ -32,17 +32,19 @@
 
   function inputTri(item, valor) {
     const v = valor == null ? '' : String(valor);
+    // Sem classes "sel-X" no HTML — o CSS :has() faz a estilização viva, sempre
+    // sincronizada com o que está marcado, sem precisar de JS pra atualizar.
     return `
       <div class="grupo-tri" role="radiogroup" aria-labelledby="lbl-${item.id}">
-        <label class="radio-tri ${v === 'true' ? 'sel-ok' : ''}">
+        <label class="radio-tri opt-ok">
           <input type="radio" name="${item.id}" value="true" ${v === 'true' ? 'checked' : ''} />
           <span>✅ OK</span>
         </label>
-        <label class="radio-tri ${v === 'false' ? 'sel-fail' : ''}">
+        <label class="radio-tri opt-fail">
           <input type="radio" name="${item.id}" value="false" ${v === 'false' ? 'checked' : ''} />
           <span>❌ Falha</span>
         </label>
-        <label class="radio-tri ${v === '' ? 'sel-pendente' : ''}">
+        <label class="radio-tri opt-pendente">
           <input type="radio" name="${item.id}" value="" ${v === '' ? 'checked' : ''} />
           <span>⏳ Sem info</span>
         </label>
@@ -53,7 +55,7 @@
     return `
       <div class="grupo-radio">
         ${item.opcoes.map(op => `
-          <label class="radio-opcao ${valor === op.valor ? 'sel' : ''}">
+          <label class="radio-opcao">
             <input type="radio" name="${item.id}" value="${op.valor}" ${valor === op.valor ? 'checked' : ''} />
             <span>${op.label}</span>
           </label>
@@ -71,7 +73,25 @@
     return `<input type="text" class="input-texto" name="${item.id}" value="${v}" />`;
   }
 
-  function renderItem(item, valor) {
+  function badgeAuto(item, valorAuto) {
+    // Mostra o valor sugerido pela extração (regex/Claude) mesmo depois do
+    // usuário editar — sanity check pra ele lembrar do que veio originalmente.
+    if (valorAuto == null || valorAuto === '') return '';
+    let texto;
+    if (item.tipo === 'tri') {
+      const map = { 'true': '✅ OK', 'false': '❌ Falha' };
+      texto = map[String(valorAuto)];
+      if (!texto) return '';
+    } else if (item.tipo === 'radio') {
+      const op = (item.opcoes || []).find(o => o.valor === valorAuto);
+      texto = op ? op.label : String(valorAuto);
+    } else {
+      texto = String(valorAuto);
+    }
+    return `<span class="badge-auto" title="Valor que a extração automática (regex/IA) sugeriu — guardado pra sanity check mesmo se você editar.">🤖 IA sugeriu: ${texto}</span>`;
+  }
+
+  function renderItem(item, valor, valorAuto) {
     let inputHtml;
     switch (item.tipo) {
       case 'tri':    inputHtml = inputTri(item, valor); break;
@@ -88,6 +108,7 @@
           ${tooltipFonte(item.fonte)}
         </div>
         <div class="item-input">${inputHtml}</div>
+        ${badgeAuto(item, valorAuto)}
         ${blocoAjuda(item)}
       </div>`;
   }
@@ -100,15 +121,16 @@
     const checklistEstado = (imovel?.checklist?.[nomeAba]) || {};
 
     return cfg.items.map(item => {
-      // Valor: prioridade pra edição manual (checklist[aba][id].valor)
-      //        fallback pra auto-preenchimento via path
+      // Valor automático (regex/IA) — sempre calculado, mesmo se o usuário editou
+      let valorAuto = item.autopreencher ? getPath(imovel, item.autopreencher) : undefined;
+      if (item.tipo === 'tri' && valorAuto != null) valorAuto = String(valorAuto);
+
+      // Valor exibido: prioridade edição manual; fallback automático
       let valor = checklistEstado[item.id]?.valor;
-      if (valor === undefined && item.autopreencher) {
-        valor = getPath(imovel, item.autopreencher);
-      }
-      // Normaliza pra string nos casos tri/radio
+      if (valor === undefined) valor = valorAuto;
       if (item.tipo === 'tri' && valor != null) valor = String(valor);
-      return renderItem(item, valor);
+
+      return renderItem(item, valor, valorAuto);
     }).join('');
   }
 

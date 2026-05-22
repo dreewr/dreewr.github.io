@@ -1252,7 +1252,9 @@ dialog#dlg-config::backdrop {
 
 .item-input { margin: 0.5rem 0; }
 
-/* Tri-estado (✅/❌/⏳) */
+/* Tri-estado (✅/❌/⏳) — usa :has() pra estilizar sempre em sincronia com o
+   radio marcado, sem precisar JS. Não-selecionados ficam acinzentados (alpha
+   + grayscale) pra reforçar visualmente qual é o ativo. */
 .grupo-tri {
   display: inline-flex;
   gap: 4px;
@@ -1263,17 +1265,28 @@ dialog#dlg-config::backdrop {
 .radio-tri {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background 0.12s;
+  opacity: 0.42;
+  filter: grayscale(0.4);
+  transition: opacity 0.15s, background 0.15s, filter 0.15s, transform 0.1s;
+  user-select: none;
 }
-.radio-tri:hover { background: rgba(0,0,0,0.04); }
+.radio-tri:hover { opacity: 0.78; background: rgba(0,0,0,0.05); }
 .radio-tri input { display: none; }
-.radio-tri.sel-ok { background: #e3f5e3; color: #1d6e1d; }
-.radio-tri.sel-fail { background: #fde2e1; color: #b00020; }
-.radio-tri.sel-pendente { background: #fff4d6; color: #8a6d1a; }
+
+/* O selecionado fica em destaque com cor característica */
+.radio-tri:has(input:checked) {
+  opacity: 1;
+  filter: none;
+  font-weight: 600;
+  transform: scale(1.03);
+}
+.radio-tri.opt-ok:has(input:checked)       { background: #c9efc9; color: #14571c; }
+.radio-tri.opt-fail:has(input:checked)     { background: #fac9c6; color: #8e0717; }
+.radio-tri.opt-pendente:has(input:checked) { background: #ffe8a3; color: #6e5409; }
 
 /* Radio múltiplas opções */
 .grupo-radio {
@@ -1288,12 +1301,29 @@ dialog#dlg-config::backdrop {
   padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.12s;
+  opacity: 0.65;
+  transition: opacity 0.15s, background 0.15s;
 }
-.radio-opcao:hover { background: var(--color-bg-soft, #f7f7f7); }
-.radio-opcao.sel {
-  background: var(--color-bg-soft, #eef);
-  font-weight: 500;
+.radio-opcao:hover { opacity: 0.9; background: var(--color-bg-soft, #f7f7f7); }
+.radio-opcao:has(input:checked) {
+  opacity: 1;
+  background: #e6efff;
+  font-weight: 600;
+  border-left: 3px solid #2a64d6;
+  padding-left: 7px;
+}
+
+/* Badge "IA sugeriu" — sanity check do valor original mesmo após edição */
+.badge-auto {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: var(--color-fg-muted, #777);
+  background: transparent;
+  border: 1px dashed var(--color-border, #ccc);
+  padding: 2px 8px;
+  border-radius: 10px;
+  cursor: help;
 }
 
 .input-numero, .input-texto {
@@ -1366,3 +1396,44 @@ dialog#dlg-config::backdrop {
   border: 1px solid var(--color-border, #ccc);
   border-radius: 4px;
 }
+
+/* ---------- Validações iniciais da Entrada ---------- */
+
+.validacoes {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  background: var(--color-bg-soft, #f7f7fa);
+  border-left: 3px solid var(--color-link, #2a64d6);
+  border-radius: 6px;
+}
+.validacoes h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+.validacoes .dica { margin: 0 0 0.75rem; font-size: 0.85rem; }
+
+.lista-validacoes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.lista-validacoes li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+}
+.val-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+}
+.val-ok       { background: #c9efc9; color: #14571c; }
+.val-fail     { background: #fac9c6; color: #8e0717; }
+.val-pendente { background: #ffe8a3; color: #6e5409; }
+.val-label { flex: 1; }
+.val-hint { color: var(--color-fg-muted, #888); cursor: help; }

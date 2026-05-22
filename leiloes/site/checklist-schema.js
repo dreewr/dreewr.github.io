@@ -23,17 +23,6 @@ window.CHECKLIST_SCHEMA = {
     icone: '📄',
     items: [
       {
-        id: 'cidade_mercado_alvo',
-        label: 'Cidade no mercado-alvo (Curitiba + RMC)',
-        tipo: 'tri',
-        autopreencher: 'edital.gates.mercado_alvo',
-        fonte: '2-analise/pontos-eliminatorios.md:13',
-        ajuda: {
-          como: 'Confira no edital o município do imóvel. Cidades aceitas: Curitiba, Almirante Tamandaré, Araucária, Campo Largo, Colombo, Fazenda Rio Grande, Pinhais, Piraquara, São José dos Pinhais.',
-          teoria: 'Fora dessas cidades, descarta — o André só atua em Curitiba + RMC. SP é canal de garimpo, não mercado.',
-        },
-      },
-      {
         id: 'leiloeiro_ok',
         label: 'Leiloeiro com nome + matrícula JUCEX',
         tipo: 'tri',

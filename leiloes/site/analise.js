@@ -135,6 +135,7 @@
     setAbasHabilitadas(true);
     atualizarTitulo();
     atualizarAnexos();
+    atualizarValidacoes();
     renderTodasAbas();
     if (jaExistia) {
       const b = $('cache-banner');
@@ -152,6 +153,51 @@
               || state.imovel?.matricula?.extraido?.endereco_completo
               || state.imovel?.id;
     if (end) t.textContent = end;
+  }
+
+  function badgeValidacao(valor) {
+    if (valor === true) return '<span class="val-badge val-ok">✅ OK</span>';
+    if (valor === false) return '<span class="val-badge val-fail">❌ Falha</span>';
+    return '<span class="val-badge val-pendente">⏳ Sem info</span>';
+  }
+
+  function atualizarValidacoes() {
+    const v = state.imovel?.validacoes_entrada;
+    const wrap = $('validacoes-entrada');
+    const lista = $('lista-validacoes');
+    if (!v) { wrap.hidden = true; return; }
+
+    const linhas = [
+      {
+        ok: v.eh_edital,
+        label: 'Arquivo do edital parece ser um edital',
+        hint: 'Procuramos por "edital", "leilão", "leiloeiro", "lance mínimo", "arrematação" no texto.',
+      },
+      {
+        ok: v.eh_matricula,
+        label: 'Arquivo da matrícula parece ser uma matrícula',
+        hint: 'Procuramos por "matrícula", "registro de imóveis", "averbação", "R-N", "Av-N" no texto.',
+      },
+      {
+        ok: v.tem_link ? true : null,
+        label: 'Link do anúncio do leiloeiro informado',
+        hint: 'Recomendado pra você poder voltar ao anúncio original. Edita na parte de cima e salva via outra aba.',
+      },
+      {
+        ok: v.mesmo_imovel,
+        label: 'Edital e matrícula se referem ao mesmo imóvel',
+        hint: v.detalhe_mesmo_imovel || 'Comparamos CEP — se falhar, comparamos rua + número.',
+      },
+    ];
+
+    lista.innerHTML = linhas.map(l => `
+      <li>
+        ${badgeValidacao(l.ok)}
+        <span class="val-label">${l.label}</span>
+        <span class="val-hint" title="${l.hint}">ℹ️</span>
+      </li>
+    `).join('');
+    wrap.hidden = false;
   }
 
   function atualizarAnexos() {

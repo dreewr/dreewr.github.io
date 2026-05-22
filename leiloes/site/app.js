@@ -173,7 +173,7 @@
     article.innerHTML = '<p class="placeholder">Carregando…</p>';
 
     try {
-      const resp = await fetch("../" + path);
+      const resp = await fetch("/" + path);
       if (!resp.ok) {
         article.innerHTML = `<h1>Arquivo não encontrado</h1><p>Não consegui abrir <code>${escapeHTML(
           path
