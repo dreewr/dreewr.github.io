@@ -11,7 +11,7 @@ Site local para navegar pelos markdowns deste repositório com **boa legibilidad
 
 Depois abre [http://localhost:8765/site/](http://localhost:8765/site/) no navegador.
 
-> O script regenera `tree.json` automaticamente (capta novos arquivos) e serve o repositório inteiro a partir do raiz — o viewer está em `/site/`, mas precisa acessar todos os markdowns em paths como `/analise/extrajudicial/onus-matricula.md`.
+> O script regenera `tree.json` automaticamente (capta novos arquivos) e serve o repositório inteiro a partir do raiz — o viewer está em `/site/`, mas precisa acessar todos os markdowns em paths como `/4b-extrajudicial/onus-matricula.md`.
 
 ### Sem o script
 
@@ -59,6 +59,6 @@ site/
 - Sem busca textual.
 - Sem renderização de Mermaid (o fluxograma no `CLAUDE.md` aparece como code block).
 - Modelos `.docx` baixam, não renderizam.
-- Sem visualização de planilhas (`analise/viabilidade/calculadora-leilao.xlsx`).
-- Sem visualização de CSVs (`garimpo/*.csv`).
+- Sem visualização de planilhas (`3-viabilidade/calculadora-leilao.xlsx`).
+- Sem visualização de CSVs (`1-garimpo/*.csv`).
 - `tree.json` é gerado sob demanda — não há watcher; novos arquivos pedem regerar.

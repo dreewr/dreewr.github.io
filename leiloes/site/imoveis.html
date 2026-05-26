@@ -1,39 +1,47 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leilões — Imóveis em análise</title>
   <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.setAttribute('data-theme','dark');</script>
 </head>
 <body class="app-page">
   <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
 
   <header class="site-header" role="banner">
-    <div class="header-left">
-      <h1 class="site-title">Imóveis em análise</h1>
-    </div>
     <div class="header-actions">
       <a class="header-link" href="index.html">📚 Documentação</a>
-      <a class="header-link primary" href="analise.html">➕ Analisar novo imóvel</a>
+      <a class="header-link" href="avaliacao.html">📊 Avaliar</a>
+      <a class="header-link" href="calculadora.html">💰 Calculadora</a>
     </div>
   </header>
 
   <main id="main-content" class="app-main" tabindex="-1">
     <section class="toolbar">
       <div class="toolbar-left">
-        <label for="filtro-status">Filtrar:</label>
-        <select id="filtro-status">
-          <option value="">Todos</option>
-          <option value="fase1_passou">Fase 1 passou</option>
-          <option value="fase1_pendente_pesquisa">Pendente pesquisa</option>
-          <option value="fase1_falhou_gates">Falhou gates</option>
-          <option value="descartado">Descartado</option>
-        </select>
+        <h1 class="site-title">Imóveis em análise</h1>
         <span id="contagem" class="contagem">—</span>
+        <!--
+          Filtro por status existe mas foi escondido por enquanto.
+          Reativar removendo o atributo `hidden` do bloco abaixo quando voltar a ser útil.
+          Opções: fase1_passou, fase1_pendente_pesquisa, fase1_falhou_gates, descartado.
+        -->
+        <span hidden>
+          <label for="filtro-status">Filtrar:</label>
+          <select id="filtro-status">
+            <option value="">Todos</option>
+            <option value="fase1_passou">Fase 1 passou</option>
+            <option value="fase1_pendente_pesquisa">Pendente pesquisa</option>
+            <option value="fase1_falhou_gates">Falhou gates</option>
+            <option value="descartado">Descartado</option>
+          </select>
+        </span>
       </div>
-      <div class="toolbar-right">
-        <button type="button" class="btn-secundario" id="btn-exportar">⬇ Exportar CSV</button>
+      <div class="toolbar-right header-actions">
+        <a class="header-link primary" href="analise.html">➕ Analisar novo imóvel</a>
+        <button type="button" class="btn-destrutivo" id="btn-deletar-todos">🗑 Deletar todos</button>
       </div>
     </section>
 

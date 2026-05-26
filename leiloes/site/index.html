@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leilões de Imóveis — Visualizador</title>
   <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.setAttribute('data-theme','dark');</script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
@@ -17,15 +18,13 @@
       <h1 class="site-title">Leilões de Imóveis</h1>
     </div>
     <div class="header-actions">
+      <a class="header-link" href="imoveis.html">🏠 Imóveis</a>
+      <a class="header-link" href="calculadora.html">💰 Calculadora</a>
       <label class="font-control">
         <span class="visually-hidden">Tamanho da fonte</span>
         <button type="button" id="font-smaller" class="font-btn" aria-label="Diminuir tamanho da fonte">A−</button>
         <button type="button" id="font-larger" class="font-btn" aria-label="Aumentar tamanho da fonte">A+</button>
       </label>
-      <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Alternar tema claro/escuro">
-        <span aria-hidden="true" id="theme-icon">🌓</span>
-        <span class="visually-hidden" id="theme-label">Tema automático</span>
-      </button>
     </div>
   </header>
 

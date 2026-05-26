@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leilões — Calculadora de viabilidade</title>
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.setAttribute('data-theme','dark');</script>
+</head>
+<body class="app-page calc-page">
+  <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+
+  <header class="site-header" role="banner">
+    <div class="header-left">
+      <h1 class="site-title">Calculadora de viabilidade</h1>
+    </div>
+    <div class="header-actions">
+      <a class="header-link" href="imoveis.html">🏠 Imóveis</a>
+      <a class="header-link" href="index.html">📚 Docs</a>
+    </div>
+  </header>
+
+  <main id="main-content" class="app-main calc-main" tabindex="-1">
+    <div id="calc-mount"></div>
+  </main>
+
+  <script src="calculadora-engine.js"></script>
+  <script src="calculadora.js"></script>
+  <script>window.Calculadora.mount(document.getElementById('calc-mount'));</script>
+</body>
+</html>

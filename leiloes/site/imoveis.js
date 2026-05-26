@@ -111,11 +111,6 @@
   btnPrev.addEventListener('click', () => { if (state.page > 1) { state.page--; carregar(); } });
   btnNext.addEventListener('click', () => { state.page++; carregar(); });
 
-  // Exportar CSV — mesma origem do site
-  document.getElementById('btn-exportar').addEventListener('click', () => {
-    window.open(`${window.API_BASE}/api/exportar-csv`, '_blank');
-  });
-
   // -- Remoção com modal de confirmação --
   const modal = document.getElementById('modal-remover');
   const modalIdEl = document.getElementById('modal-id-display');
@@ -146,6 +141,45 @@
   btnCancelar.addEventListener('click', fecharModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) fecharModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) fecharModal(); });
+
+  document.getElementById('btn-deletar-todos').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-deletar-todos');
+    btn.disabled = true;
+    const txt = btn.textContent;
+    btn.textContent = 'Buscando…';
+    let ids = [];
+    try {
+      const resp = await fetch(`${window.API_BASE}/api/imoveis?page=1&size=10000`);
+      if (!resp.ok) throw new Error(resp.status);
+      const data = await resp.json();
+      ids = data.items.map(i => i.id);
+    } catch (e) {
+      btn.textContent = txt; btn.disabled = false;
+      alert('Erro ao listar imóveis: ' + e.message);
+      return;
+    }
+    if (!ids.length) {
+      btn.textContent = txt; btn.disabled = false;
+      alert('Nada para deletar.');
+      return;
+    }
+    if (!confirm(`Deletar TODOS os ${ids.length} imóveis? Isso apaga permanentemente os JSONs e PDFs e não dá pra desfazer.`)) {
+      btn.textContent = txt; btn.disabled = false;
+      return;
+    }
+    let falhas = 0;
+    for (let i = 0; i < ids.length; i++) {
+      btn.textContent = `Deletando ${i+1}/${ids.length}…`;
+      try {
+        const resp = await fetch(`${window.API_BASE}/api/imoveis/${encodeURIComponent(ids[i])}`, { method: 'DELETE' });
+        if (!resp.ok) falhas++;
+      } catch (_) { falhas++; }
+    }
+    btn.textContent = txt;
+    btn.disabled = false;
+    if (falhas) alert(`${falhas} falha(s) ao remover.`);
+    carregar();
+  });
 
   btnConfirmar.addEventListener('click', async () => {
     if (!idParaRemover) return;

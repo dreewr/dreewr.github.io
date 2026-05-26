@@ -1,26 +1,47 @@
 #!/usr/bin/env bash
-# Serve o repositório a partir do raiz, para o viewer em site/ acessar
-# todos os markdowns por path absoluto.
+# Sobe o servidor Flask que serve o site + API de análise de imóveis.
 #
 # Uso:  ./site/serve.sh  [porta]
-#       (porta default: 8765)
+#       (porta default: 9000)
+#
+# Wizard de análise:  http://<host>:<porta>/imoveis
+# Viewer de docs:      http://<host>:<porta>/docs
 
 set -euo pipefail
 
-PORT="${1:-8765}"
+PORT="${1:-9000}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 cd "$REPO_ROOT"
 
-# Regenera tree.json sempre que o servidor sobe — captura novos arquivos
-# adicionados desde a última geração.
-python3 site/generate_tree.py
+# Regenera tree.json — usado pelo viewer de docs em /docs
+.venv/bin/python site/generate_tree.py
 
-echo
-echo "Servindo $REPO_ROOT em http://localhost:$PORT/"
-echo "Viewer:           http://localhost:$PORT/site/"
-echo
-echo "Ctrl-C para parar."
-echo
+# Descobre IP local pra mostrar URL acessível de outros dispositivos no wifi.
+LOCAL_IP="$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || echo '')"
 
-python3 -m http.server "$PORT"
+cat <<EOF
+
+╭───────────────────────────────────────────────────╮
+│  Servidor de análise de imóveis no ar             │
+╰───────────────────────────────────────────────────╯
+
+  Aqui na máquina:   http://localhost:$PORT/
+EOF
+
+if [ -n "$LOCAL_IP" ]; then
+  cat <<EOF
+  Outros no wifi:    http://$LOCAL_IP:$PORT/
+EOF
+fi
+
+cat <<'EOF'
+
+  Wizard de análise:  /imoveis
+  Viewer de docs:     /docs
+
+  Ctrl-C para parar.
+
+EOF
+
+exec .venv/bin/python scripts/server.py "$PORT"

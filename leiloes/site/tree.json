@@ -1,350 +1,413 @@
 [
   {
     "type": "dir",
-    "name": "analise",
-    "path": "analise",
-    "children": [
-      {
-        "type": "dir",
-        "name": "extrajudicial",
-        "path": "analise/extrajudicial",
-        "children": [
-          {
-            "type": "dir",
-            "name": "analises-praticas",
-            "path": "analise/extrajudicial/analises-praticas",
-            "children": [
-              {
-                "type": "md",
-                "name": "README.md",
-                "path": "analise/extrajudicial/analises-praticas/README.md"
-              },
-              {
-                "type": "md",
-                "name": "santander-itapecerica-sp.md",
-                "path": "analise/extrajudicial/analises-praticas/santander-itapecerica-sp.md"
-              }
-            ]
-          },
-          {
-            "type": "dir",
-            "name": "modelos",
-            "path": "analise/extrajudicial/modelos",
-            "children": [
-              {
-                "type": "model",
-                "name": "peticao-cancelamento-onus.docx",
-                "path": "analise/extrajudicial/modelos/peticao-cancelamento-onus.docx"
-              }
-            ]
-          },
-          {
-            "type": "md",
-            "name": "caixa.md",
-            "path": "analise/extrajudicial/caixa.md"
-          },
-          {
-            "type": "md",
-            "name": "checklist.md",
-            "path": "analise/extrajudicial/checklist.md"
-          },
-          {
-            "type": "md",
-            "name": "guia.md",
-            "path": "analise/extrajudicial/guia.md"
-          },
-          {
-            "type": "md",
-            "name": "hipoteca.md",
-            "path": "analise/extrajudicial/hipoteca.md"
-          },
-          {
-            "type": "md",
-            "name": "notificacao.md",
-            "path": "analise/extrajudicial/notificacao.md"
-          },
-          {
-            "type": "md",
-            "name": "onus-matricula.md",
-            "path": "analise/extrajudicial/onus-matricula.md"
-          },
-          {
-            "type": "md",
-            "name": "oportunidades-pos-leilao.md",
-            "path": "analise/extrajudicial/oportunidades-pos-leilao.md"
-          },
-          {
-            "type": "md",
-            "name": "pos-arrematacao.md",
-            "path": "analise/extrajudicial/pos-arrematacao.md"
-          },
-          {
-            "type": "md",
-            "name": "processos-devedor-credor.md",
-            "path": "analise/extrajudicial/processos-devedor-credor.md"
-          },
-          {
-            "type": "md",
-            "name": "README.md",
-            "path": "analise/extrajudicial/README.md"
-          }
-        ]
-      },
-      {
-        "type": "dir",
-        "name": "viabilidade",
-        "path": "analise/viabilidade",
-        "children": [
-          {
-            "type": "md",
-            "name": "calculadora-financiada.md",
-            "path": "analise/viabilidade/calculadora-financiada.md"
-          },
-          {
-            "type": "md",
-            "name": "calculadora-vista.md",
-            "path": "analise/viabilidade/calculadora-vista.md"
-          },
-          {
-            "type": "md",
-            "name": "duvidas.md",
-            "path": "analise/viabilidade/duvidas.md"
-          },
-          {
-            "type": "md",
-            "name": "README.md",
-            "path": "analise/viabilidade/README.md"
-          },
-          {
-            "type": "md",
-            "name": "TODO.md",
-            "path": "analise/viabilidade/TODO.md"
-          }
-        ]
-      },
-      {
-        "type": "md",
-        "name": "checklist-contatos.md",
-        "path": "analise/checklist-contatos.md"
-      },
-      {
-        "type": "md",
-        "name": "conservacao-ocupacao.md",
-        "path": "analise/conservacao-ocupacao.md"
-      },
-      {
-        "type": "md",
-        "name": "debitos.md",
-        "path": "analise/debitos.md"
-      },
-      {
-        "type": "md",
-        "name": "edital.md",
-        "path": "analise/edital.md"
-      },
-      {
-        "type": "md",
-        "name": "ferramentas.md",
-        "path": "analise/ferramentas.md"
-      },
-      {
-        "type": "md",
-        "name": "liquidez.md",
-        "path": "analise/liquidez.md"
-      },
-      {
-        "type": "md",
-        "name": "pesquisa-debitos.md",
-        "path": "analise/pesquisa-debitos.md"
-      },
-      {
-        "type": "md",
-        "name": "README.md",
-        "path": "analise/README.md"
-      },
-      {
-        "type": "md",
-        "name": "TODO.md",
-        "path": "analise/TODO.md"
-      },
-      {
-        "type": "md",
-        "name": "valor-mercado.md",
-        "path": "analise/valor-mercado.md"
-      },
-      {
-        "type": "md",
-        "name": "viabilidade-financeira.md",
-        "path": "analise/viabilidade-financeira.md"
-      }
-    ]
-  },
-  {
-    "type": "dir",
-    "name": "desocupacao",
-    "path": "desocupacao",
-    "children": [
-      {
-        "type": "dir",
-        "name": "modelos",
-        "path": "desocupacao/modelos",
-        "children": [
-          {
-            "type": "model",
-            "name": "acao-imissao-posse.docx",
-            "path": "desocupacao/modelos/acao-imissao-posse.docx"
-          },
-          {
-            "type": "model",
-            "name": "carta-quitacao-acordo.docx",
-            "path": "desocupacao/modelos/carta-quitacao-acordo.docx"
-          },
-          {
-            "type": "model",
-            "name": "notificacao-telegrama.docx",
-            "path": "desocupacao/modelos/notificacao-telegrama.docx"
-          },
-          {
-            "type": "model",
-            "name": "termo-acordo-amigavel.docx",
-            "path": "desocupacao/modelos/termo-acordo-amigavel.docx"
-          }
-        ]
-      },
-      {
-        "type": "md",
-        "name": "extrajudicial.md",
-        "path": "desocupacao/extrajudicial.md"
-      },
-      {
-        "type": "md",
-        "name": "README.md",
-        "path": "desocupacao/README.md"
-      },
-      {
-        "type": "md",
-        "name": "TODO.md",
-        "path": "desocupacao/TODO.md"
-      }
-    ]
-  },
-  {
-    "type": "dir",
-    "name": "garimpo",
-    "path": "garimpo",
+    "name": "1-garimpo",
+    "path": "1-garimpo",
     "children": [
       {
         "type": "dir",
         "name": "pronto",
-        "path": "garimpo/pronto",
+        "path": "1-garimpo/pronto",
         "children": [
           {
             "type": "md",
             "name": "banco.md",
-            "path": "garimpo/pronto/banco.md"
+            "path": "1-garimpo/pronto/banco.md"
           },
           {
             "type": "md",
             "name": "pr.md",
-            "path": "garimpo/pronto/pr.md"
+            "path": "1-garimpo/pronto/pr.md"
           },
           {
             "type": "md",
             "name": "README.md",
-            "path": "garimpo/pronto/README.md"
+            "path": "1-garimpo/pronto/README.md"
           },
           {
             "type": "md",
             "name": "sp.md",
-            "path": "garimpo/pronto/sp.md"
-          }
-        ]
-      },
-      {
-        "type": "dir",
-        "name": "resultados",
-        "path": "garimpo/resultados",
-        "children": [
-          {
-            "type": "md",
-            "name": "README.md",
-            "path": "garimpo/resultados/README.md"
+            "path": "1-garimpo/pronto/sp.md"
           }
         ]
       },
       {
         "type": "md",
         "name": "divergencias.md",
-        "path": "garimpo/divergencias.md"
+        "path": "1-garimpo/divergencias.md"
       },
       {
         "type": "md",
         "name": "README.md",
-        "path": "garimpo/README.md"
+        "path": "1-garimpo/README.md"
       },
       {
         "type": "md",
         "name": "sugestoes.md",
-        "path": "garimpo/sugestoes.md"
+        "path": "1-garimpo/sugestoes.md"
       },
       {
         "type": "md",
         "name": "TODO.md",
-        "path": "garimpo/TODO.md"
+        "path": "1-garimpo/TODO.md"
       },
       {
         "type": "md",
         "name": "verificacao.md",
-        "path": "garimpo/verificacao.md"
+        "path": "1-garimpo/verificacao.md"
       }
     ]
   },
   {
     "type": "dir",
-    "name": "locado",
-    "path": "locado",
+    "name": "2-analise",
+    "path": "2-analise",
+    "children": [
+      {
+        "type": "md",
+        "name": "1-edital.md",
+        "path": "2-analise/1-edital.md"
+      },
+      {
+        "type": "md",
+        "name": "2-matricula.md",
+        "path": "2-analise/2-matricula.md"
+      },
+      {
+        "type": "md",
+        "name": "3-valor-mercado.md",
+        "path": "2-analise/3-valor-mercado.md"
+      },
+      {
+        "type": "md",
+        "name": "4-liquidez.md",
+        "path": "2-analise/4-liquidez.md"
+      },
+      {
+        "type": "md",
+        "name": "5-conservacao-ocupacao.md",
+        "path": "2-analise/5-conservacao-ocupacao.md"
+      },
+      {
+        "type": "md",
+        "name": "6-checklist-contatos.md",
+        "path": "2-analise/6-checklist-contatos.md"
+      },
+      {
+        "type": "md",
+        "name": "7-ferramentas.md",
+        "path": "2-analise/7-ferramentas.md"
+      },
+      {
+        "type": "md",
+        "name": "8-pesquisa-debitos.md",
+        "path": "2-analise/8-pesquisa-debitos.md"
+      },
+      {
+        "type": "md",
+        "name": "debitos.md",
+        "path": "2-analise/debitos.md"
+      },
+      {
+        "type": "md",
+        "name": "README.md",
+        "path": "2-analise/README.md"
+      },
+      {
+        "type": "md",
+        "name": "TODO.md",
+        "path": "2-analise/TODO.md"
+      },
+      {
+        "type": "md",
+        "name": "viabilidade-financeira.md",
+        "path": "2-analise/viabilidade-financeira.md"
+      }
+    ]
+  },
+  {
+    "type": "dir",
+    "name": "3-viabilidade",
+    "path": "3-viabilidade",
+    "children": [
+      {
+        "type": "md",
+        "name": "calculadora-financiada.md",
+        "path": "3-viabilidade/calculadora-financiada.md"
+      },
+      {
+        "type": "md",
+        "name": "calculadora-vista.md",
+        "path": "3-viabilidade/calculadora-vista.md"
+      },
+      {
+        "type": "md",
+        "name": "duvidas.md",
+        "path": "3-viabilidade/duvidas.md"
+      },
+      {
+        "type": "md",
+        "name": "README.md",
+        "path": "3-viabilidade/README.md"
+      },
+      {
+        "type": "md",
+        "name": "TODO.md",
+        "path": "3-viabilidade/TODO.md"
+      }
+    ]
+  },
+  {
+    "type": "dir",
+    "name": "4a-judicial",
+    "path": "4a-judicial",
+    "children": [
+      {
+        "type": "md",
+        "name": "README.md",
+        "path": "4a-judicial/README.md"
+      }
+    ]
+  },
+  {
+    "type": "dir",
+    "name": "4b-extrajudicial",
+    "path": "4b-extrajudicial",
+    "children": [
+      {
+        "type": "dir",
+        "name": "analises-praticas",
+        "path": "4b-extrajudicial/analises-praticas",
+        "children": [
+          {
+            "type": "md",
+            "name": "README.md",
+            "path": "4b-extrajudicial/analises-praticas/README.md"
+          },
+          {
+            "type": "md",
+            "name": "santander-itapecerica-sp.md",
+            "path": "4b-extrajudicial/analises-praticas/santander-itapecerica-sp.md"
+          }
+        ]
+      },
+      {
+        "type": "dir",
+        "name": "modelos",
+        "path": "4b-extrajudicial/modelos",
+        "children": [
+          {
+            "type": "model",
+            "name": "peticao-cancelamento-onus.docx",
+            "path": "4b-extrajudicial/modelos/peticao-cancelamento-onus.docx"
+          }
+        ]
+      },
+      {
+        "type": "md",
+        "name": "1-guia.md",
+        "path": "4b-extrajudicial/1-guia.md"
+      },
+      {
+        "type": "md",
+        "name": "caixa.md",
+        "path": "4b-extrajudicial/caixa.md"
+      },
+      {
+        "type": "md",
+        "name": "checklist.md",
+        "path": "4b-extrajudicial/checklist.md"
+      },
+      {
+        "type": "md",
+        "name": "hipoteca.md",
+        "path": "4b-extrajudicial/hipoteca.md"
+      },
+      {
+        "type": "md",
+        "name": "notificacao.md",
+        "path": "4b-extrajudicial/notificacao.md"
+      },
+      {
+        "type": "md",
+        "name": "onus-matricula.md",
+        "path": "4b-extrajudicial/onus-matricula.md"
+      },
+      {
+        "type": "md",
+        "name": "oportunidades-pos-leilao.md",
+        "path": "4b-extrajudicial/oportunidades-pos-leilao.md"
+      },
+      {
+        "type": "md",
+        "name": "pos-arrematacao.md",
+        "path": "4b-extrajudicial/pos-arrematacao.md"
+      },
+      {
+        "type": "md",
+        "name": "processos-devedor-credor.md",
+        "path": "4b-extrajudicial/processos-devedor-credor.md"
+      },
+      {
+        "type": "md",
+        "name": "README.md",
+        "path": "4b-extrajudicial/README.md"
+      }
+    ]
+  },
+  {
+    "type": "dir",
+    "name": "5-arrematacao",
+    "path": "5-arrematacao",
+    "children": [
+      {
+        "type": "md",
+        "name": "README.md",
+        "path": "5-arrematacao/README.md"
+      }
+    ]
+  },
+  {
+    "type": "dir",
+    "name": "6a-desocupacao",
+    "path": "6a-desocupacao",
     "children": [
       {
         "type": "dir",
         "name": "modelos",
-        "path": "locado/modelos",
+        "path": "6a-desocupacao/modelos",
+        "children": [
+          {
+            "type": "model",
+            "name": "acao-imissao-posse.docx",
+            "path": "6a-desocupacao/modelos/acao-imissao-posse.docx"
+          },
+          {
+            "type": "model",
+            "name": "carta-quitacao-acordo.docx",
+            "path": "6a-desocupacao/modelos/carta-quitacao-acordo.docx"
+          },
+          {
+            "type": "model",
+            "name": "notificacao-telegrama.docx",
+            "path": "6a-desocupacao/modelos/notificacao-telegrama.docx"
+          },
+          {
+            "type": "model",
+            "name": "termo-acordo-amigavel.docx",
+            "path": "6a-desocupacao/modelos/termo-acordo-amigavel.docx"
+          }
+        ]
+      },
+      {
+        "type": "md",
+        "name": "extrajudicial.md",
+        "path": "6a-desocupacao/extrajudicial.md"
+      },
+      {
+        "type": "md",
+        "name": "README.md",
+        "path": "6a-desocupacao/README.md"
+      },
+      {
+        "type": "md",
+        "name": "TODO.md",
+        "path": "6a-desocupacao/TODO.md"
+      }
+    ]
+  },
+  {
+    "type": "dir",
+    "name": "6b-locado",
+    "path": "6b-locado",
+    "children": [
+      {
+        "type": "dir",
+        "name": "modelos",
+        "path": "6b-locado/modelos",
         "children": [
           {
             "type": "model",
             "name": "acao-despejo.docx",
-            "path": "locado/modelos/acao-despejo.docx"
+            "path": "6b-locado/modelos/acao-despejo.docx"
           },
           {
             "type": "model",
             "name": "adendo-contrato-locacao.docx",
-            "path": "locado/modelos/adendo-contrato-locacao.docx"
+            "path": "6b-locado/modelos/adendo-contrato-locacao.docx"
           },
           {
             "type": "model",
             "name": "denuncia-locacao-telegrama.docx",
-            "path": "locado/modelos/denuncia-locacao-telegrama.docx"
+            "path": "6b-locado/modelos/denuncia-locacao-telegrama.docx"
           },
           {
             "type": "model",
             "name": "quitacao-imovel-locado.docx",
-            "path": "locado/modelos/quitacao-imovel-locado.docx"
+            "path": "6b-locado/modelos/quitacao-imovel-locado.docx"
           }
         ]
       },
       {
         "type": "md",
         "name": "duvidas.md",
-        "path": "locado/duvidas.md"
+        "path": "6b-locado/duvidas.md"
       },
       {
         "type": "md",
         "name": "extrajudicial.md",
-        "path": "locado/extrajudicial.md"
+        "path": "6b-locado/extrajudicial.md"
       },
       {
         "type": "md",
         "name": "README.md",
-        "path": "locado/README.md"
+        "path": "6b-locado/README.md"
+      }
+    ]
+  },
+  {
+    "type": "dir",
+    "name": "7-reforma",
+    "path": "7-reforma",
+    "children": [
+      {
+        "type": "md",
+        "name": "README.md",
+        "path": "7-reforma/README.md"
+      }
+    ]
+  },
+  {
+    "type": "dir",
+    "name": "8-revenda",
+    "path": "8-revenda",
+    "children": [
+      {
+        "type": "dir",
+        "name": "modelos",
+        "path": "8-revenda/modelos",
+        "children": [
+          {
+            "type": "model",
+            "name": "compromisso-compra-venda.docx",
+            "path": "8-revenda/modelos/compromisso-compra-venda.docx"
+          }
+        ]
+      },
+      {
+        "type": "md",
+        "name": "promessa-compra-venda.md",
+        "path": "8-revenda/promessa-compra-venda.md"
+      },
+      {
+        "type": "md",
+        "name": "README.md",
+        "path": "8-revenda/README.md"
+      },
+      {
+        "type": "md",
+        "name": "venda-com-financiamento-em-aberto.md",
+        "path": "8-revenda/venda-com-financiamento-em-aberto.md"
       }
     ]
   },
@@ -412,40 +475,6 @@
         "type": "md",
         "name": "README.md",
         "path": "mapas mentais/README.md"
-      }
-    ]
-  },
-  {
-    "type": "dir",
-    "name": "revenda",
-    "path": "revenda",
-    "children": [
-      {
-        "type": "dir",
-        "name": "modelos",
-        "path": "revenda/modelos",
-        "children": [
-          {
-            "type": "model",
-            "name": "compromisso-compra-venda.docx",
-            "path": "revenda/modelos/compromisso-compra-venda.docx"
-          }
-        ]
-      },
-      {
-        "type": "md",
-        "name": "promessa-compra-venda.md",
-        "path": "revenda/promessa-compra-venda.md"
-      },
-      {
-        "type": "md",
-        "name": "README.md",
-        "path": "revenda/README.md"
-      },
-      {
-        "type": "md",
-        "name": "venda-com-financiamento-em-aberto.md",
-        "path": "revenda/venda-com-financiamento-em-aberto.md"
       }
     ]
   },

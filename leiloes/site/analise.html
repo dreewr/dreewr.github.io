@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leilões — Analisar imóvel</title>
   <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.setAttribute('data-theme','dark');</script>
 </head>
 <body class="app-page">
   <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
@@ -28,36 +29,45 @@
       <button type="button" class="aba-tab ativo" data-tab="entrada" role="tab" aria-selected="true">📥 Entrada</button>
       <button type="button" class="aba-tab" data-tab="edital" role="tab" disabled>📄 Edital</button>
       <button type="button" class="aba-tab" data-tab="matricula" role="tab" disabled>📜 Matrícula</button>
-      <button type="button" class="aba-tab" data-tab="processos" role="tab" disabled>⚖️ Processos</button>
+      <button type="button" class="aba-tab" data-tab="avaliacao" role="tab" disabled>📊 Avaliação</button>
       <button type="button" class="aba-tab" data-tab="viabilidade" role="tab" disabled>💰 Viabilidade</button>
+      <button type="button" class="aba-tab" data-tab="processos" role="tab" disabled>⚖️ Processos</button>
       <button type="button" class="aba-tab" data-tab="arrematacao" role="tab" disabled>🏆 Arrematação</button>
     </nav>
 
     <!-- ABA: ENTRADA -->
     <section class="aba-conteudo" data-tab-content="entrada">
       <h2>Documentos do imóvel</h2>
-      <p class="dica">Anexe o edital e a matrícula em PDF. A análise leva 1-3 minutos. Você poderá editar tudo nas abas seguintes.</p>
 
-      <div class="campos-entrada">
-        <div class="campo-entrada">
-          <label for="link-imovel">Link do imóvel (página do leiloeiro)</label>
-          <input type="url" id="link-imovel" placeholder="https://..." />
-        </div>
+      <div id="entrada-uploads">
+        <p class="dica">Anexe o edital e a matrícula em PDF. A análise leva 1-3 minutos. Você poderá editar tudo nas abas seguintes.</p>
 
-        <div class="campo-entrada">
-          <label for="arq-edital">Edital (PDF)</label>
-          <input type="file" id="arq-edital" accept="application/pdf,.pdf" />
-        </div>
+        <div class="campos-entrada">
+          <div class="campo-entrada">
+            <label for="link-imovel">Link do imóvel (página do leiloeiro)</label>
+            <input type="url" id="link-imovel" placeholder="https://..." />
+          </div>
 
-        <div class="campo-entrada">
-          <label for="arq-matricula">Matrícula (PDF)</label>
-          <input type="file" id="arq-matricula" accept="application/pdf,.pdf" />
+          <div class="campo-entrada">
+            <label for="arq-edital">Edital (PDF)</label>
+            <input type="file" id="arq-edital" accept="application/pdf,.pdf" />
+            <span class="campo-ou">ou cole o link de download direto:</span>
+            <input type="url" id="url-edital" placeholder="https://…/edital.pdf" />
+          </div>
+
+          <div class="campo-entrada">
+            <label for="arq-matricula">Matrícula (PDF)</label>
+            <input type="file" id="arq-matricula" accept="application/pdf,.pdf" />
+            <span class="campo-ou">ou cole o link de download direto:</span>
+            <input type="url" id="url-matricula" placeholder="https://…/matricula.pdf" />
+          </div>
         </div>
       </div>
 
       <div class="acoes">
         <button type="button" id="btn-analisar" class="btn-primario">Analisar</button>
         <span id="loading" class="loading" hidden>⏳ Analisando…</span>
+        <span id="reanalisar-status" class="status-salvo" hidden></span>
       </div>
 
       <p id="erro-analise" class="erro" hidden></p>
@@ -78,18 +88,9 @@
         <ul class="lista-anexos">
           <li><a id="link-pdf-edital" href="#" target="_blank" rel="noopener" hidden>📄 Ver edital salvo</a></li>
           <li><a id="link-pdf-matricula" href="#" target="_blank" rel="noopener" hidden>📜 Ver matrícula salva</a></li>
+          <li><a id="link-pdf-matricula-anotada" href="#" target="_blank" rel="noopener" hidden>🖍️ Ver matrícula <strong>com highlights da IA</strong></a></li>
           <li><a id="link-anuncio-salvo" href="#" target="_blank" rel="noopener" hidden>🔗 Página do leiloeiro</a></li>
         </ul>
-
-        <div class="acoes acoes-aba">
-          <button type="button" id="btn-reanalisar" class="btn-secundario">
-            🔄 Re-analisar com pipeline atual
-          </button>
-          <span id="reanalisar-status" class="status-salvo" hidden></span>
-        </div>
-        <p class="dica" style="margin-top: 0.5rem;">
-          Re-executa a extração nos PDFs já salvos (sem precisar re-uploadar). Útil quando o pipeline foi melhorado. <strong>Preserva</strong> o que você editou nas outras abas (checklist, viabilidade).
-        </p>
       </div>
     </section>
 
@@ -109,8 +110,9 @@
 
     <section class="aba-conteudo" data-tab-content="matricula" hidden>
       <h2>
-        Jurídico — Matrícula
-        <a id="link-pdf-matricula-aba" class="link-pdf-aba" href="#" target="_blank" rel="noopener" hidden>📜 abrir PDF</a>
+        Jurídico — Matrícula<span id="titulo-matricula-numero"></span>
+        <a id="link-pdf-matricula-aba" class="link-pdf-aba" href="#" target="_blank" rel="noopener" hidden>📜 PDF original</a>
+        <a id="link-pdf-matricula-anotada-aba" class="link-pdf-aba" href="#" target="_blank" rel="noopener" hidden>🖍️ PDF com highlights</a>
       </h2>
       <p class="dica">Atos da matrícula classificados cronologicamente. Confira consolidação, AFs, ônus, notificação.</p>
       <div class="checklist" data-checklist="matricula"></div>
@@ -118,6 +120,17 @@
         <button type="button" class="btn-primario btn-salvar-aba" data-aba="matricula">Salvar alterações</button>
         <span class="status-salvo" data-status-salvo="matricula" hidden>✅ Salvo</span>
       </div>
+    </section>
+
+    <section class="aba-conteudo" data-tab-content="avaliacao" hidden>
+      <h2>Avaliação do imóvel</h2>
+      <p class="dica">Estime o valor de mercado por regressão OLS sobre amostras comparáveis. O resultado vira a dica de valor na aba Viabilidade.</p>
+      <div id="aval-mount"></div>
+    </section>
+
+    <section class="aba-conteudo calc-page" data-tab-content="viabilidade" hidden>
+      <h2>Viabilidade Financeira</h2>
+      <div id="calc-mount-viabilidade"></div>
     </section>
 
     <section class="aba-conteudo" data-tab-content="processos" hidden>
@@ -128,44 +141,6 @@
         <button type="button" class="btn-primario btn-salvar-aba" data-aba="processos">Salvar alterações</button>
         <span class="status-salvo" data-status-salvo="processos" hidden>✅ Salvo</span>
       </div>
-    </section>
-
-    <section class="aba-conteudo" data-tab-content="viabilidade" hidden>
-      <h2>Viabilidade Financeira</h2>
-      <p class="dica">Preencha estimativas e calcule. Meta: lucro ≥ 30%.</p>
-      <div class="checklist" data-checklist="viabilidade"></div>
-
-      <fieldset class="custos-arrematacao">
-        <legend>Custos da arrematação (defaults aceitáveis)</legend>
-        <label for="comissao-leiloeiro">Comissão do leiloeiro (%)</label>
-        <input type="number" id="comissao-leiloeiro" min="0" step="0.1" value="5" />
-
-        <label for="itbi">ITBI (%) — Curitiba 2,7</label>
-        <input type="number" id="itbi" min="0" step="0.1" value="2.7" />
-
-        <label for="registro">Registro + escritura (R$)</label>
-        <input type="number" id="registro" min="0" step="100" value="2500" />
-
-        <label for="advogado">Advogado (R$) — pior caso 4500</label>
-        <input type="number" id="advogado" min="0" step="100" value="4500" />
-
-        <label for="reforma">Reforma (R$)</label>
-        <input type="number" id="reforma" min="0" step="500" value="10000" />
-
-        <label for="outros">Outros (R$)</label>
-        <input type="number" id="outros" min="0" step="100" value="1500" />
-
-        <label for="prazo">Prazo até a venda (meses)</label>
-        <input type="number" id="prazo" min="1" step="1" value="12" />
-      </fieldset>
-
-      <div class="acoes acoes-aba">
-        <button type="button" class="btn-primario btn-salvar-aba" data-aba="viabilidade">Salvar alterações</button>
-        <button type="button" class="btn-secundario" id="btn-calcular">Calcular viabilidade</button>
-        <span class="status-salvo" data-status-salvo="viabilidade" hidden>✅ Salvo</span>
-      </div>
-
-      <div id="resultado-viab" class="resultado"></div>
     </section>
 
     <section class="aba-conteudo" data-tab-content="arrematacao" hidden>
@@ -188,6 +163,9 @@
   <script src="api-base.js"></script>
   <script src="checklist-schema.js"></script>
   <script src="analise-render.js"></script>
+  <script src="avaliacao.js"></script>
+  <script src="calculadora-engine.js"></script>
+  <script src="calculadora.js"></script>
   <script src="analise.js"></script>
 </body>
 </html>

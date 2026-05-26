@@ -219,38 +219,9 @@
       .replace(/>/g, "&gt;");
   }
 
-  // ----- theme -------------------------------------------------------------
-  const THEME_KEY = "leiloes-theme";
-  const THEME_ICONS = { light: "☀️", dark: "🌙", auto: "🌓" };
-  const THEME_LABELS = {
-    light: "Tema claro",
-    dark: "Tema escuro",
-    auto: "Tema automático (segue o sistema)",
-  };
-
-  function applyTheme(mode) {
-    if (mode === "auto") {
-      document.documentElement.removeAttribute("data-theme");
-    } else {
-      document.documentElement.setAttribute("data-theme", mode);
-    }
-    document.getElementById("theme-icon").textContent = THEME_ICONS[mode];
-    document.getElementById("theme-label").textContent = THEME_LABELS[mode];
-    document
-      .getElementById("theme-toggle")
-      .setAttribute("aria-label", THEME_LABELS[mode] + " — clicar para alternar");
-  }
-
+  // ----- theme (sempre dark) ------------------------------------------------
   function initTheme() {
-    const saved = localStorage.getItem(THEME_KEY) || "auto";
-    applyTheme(saved);
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-      const current = localStorage.getItem(THEME_KEY) || "auto";
-      const next =
-        current === "auto" ? "light" : current === "light" ? "dark" : "auto";
-      localStorage.setItem(THEME_KEY, next);
-      applyTheme(next);
-    });
+    document.documentElement.setAttribute("data-theme", "dark");
   }
 
   // ----- font size --------------------------------------------------------
